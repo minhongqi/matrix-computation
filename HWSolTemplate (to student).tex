@@ -1,0 +1,299 @@
+\documentclass[english,onecolumn,UTF8]{IEEEtran}
+\usepackage{CTEX}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{luainputenc}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose}
+\usepackage{amsfonts}
+\usepackage{babel}
+\usepackage{amsmath}
+\providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
+\topmargin            -18.0mm
+\textheight           226.0mm
+\oddsidemargin      -4.0mm
+\textwidth            166.0mm
+\def\baselinestretch{1.5}
+
+
+
+\begin{document}
+
+\begin{center}
+\textbf{SI231 - Matrix Computations, Fall 2020-21} \\ Homework Set \#1\\
+\texttt{\textbf{Name:}}   	\texttt{ 闵红旗 }  		\hspace{1bp}
+\texttt{\textbf{Major:}}  	\texttt{ EE } 	\\
+\texttt{\textbf{Student No.:}} 	\texttt{ 2020E8018482005}     \hspace{1bp}
+\texttt{\textbf{E-mail:}} 	\texttt{ minhq@sari.ac.cn}
+\par\end{center}
+
+\section{UNDERSTANDING RANK, RANGE SPACE AND NULL SPACE}
+
+\begin{enumerate}
+	
+	\item \textbf{Solution:}
+	\begin{enumerate}
+	
+\item 为了证明 $\mathcal{R}(A^T)\oplus \mathcal{N}(A)=\mathbb{R}^n$ ,\ 等价于证明 $\mathcal{R}(A^T) \bigcap \mathcal{N}(A)=0\ and\  \mathcal{R}(A^T)+ \mathcal{N}(A)=\mathbb{R}^n$，
+\\又因为$A^T\in \mathbb{R}^{m\times n}$\ ,\ $\mathcal{R}(A^T)=\{ y\in \mathbb{R}^n  \mid y =Ax,x\in \mathbb{R}^n\}$\ ,\ $\mathcal{N}(A)=\{y\in \mathbb{R}^n\mid Ay=0\} $\ ,
+\\假设存在$\bold y\not= \bold 0$,由$\mathcal{N}(A)=\{y\in \mathbb{R}^n\mid Ay=0\}$得$rank(A)=n$,则只存在唯一x满足$y=Ax$,所以假设不成立,
+\\又易知$\mathcal{R}(A^T)$和$\mathcal{N}(A)$均包含$\bold 0$,所以$\mathcal{R}(A^T) \bigcap \mathcal{N}(A)=\bold 0$
+\\设$rank(A)=k$,则$rank(\mathcal{R}(A^T))=k,dim(\mathcal{R}(A^T))=k,dim(\mathcal{N}(A))=n-k$,
+\\所以，$dim(\mathcal{R}(A^T))+dim(\mathcal{N}(A))=n$,
+\\即$\mathcal{R}(A^T)+ \mathcal{N}(A)=\mathbb{R}^n$.
+\\综上,$\mathcal{R}(A^T)\oplus \mathcal{N}(A)=\mathbb{R}^n$
+
+
+	\item The set is For matrices $\bold A \in \mathbb{R}^{m\times n},\bold B \in \mathbb{R}^{m\times n}$,\ prove that $rank(\bold A + \bold B)\le rank(\bold A) +rank(\bold B)$
+\\设$rank(\bold A)=p,rank(\bold B)=q$,将$\bold A,\bold B$按列分块得
+\\$\bold A= \left[\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_s} \right]$,$\bold B= \left[\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\beta_s} \right]$
+\\于是 $\left[ \bold A, \bold B\right] = \left[\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_s},\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\beta_s} \right]$,
+\\ $\bold A+ \bold B=\left[\boldsymbol{\alpha_1}+\boldsymbol{\beta_1},\boldsymbol{\alpha_2}+\boldsymbol{\beta_2},\boldsymbol{\alpha_3}+\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\alpha_s}+\boldsymbol{\beta_s}\right]$,
+\\因$\boldsymbol{\alpha_i}+\boldsymbol{\beta_i}(i=1,2,\cdots,s)$均可由向量组$\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_s},\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\beta_s}$线性表出，故
+\\$rank(\bold A + \bold B)\leq rank(\left[ \bold A, \bold B\right] )$
+\\又设$\bold A, \bold B$的列空间的极大线性无关组分别为$\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_p}$和$\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\beta_p}$，将$\bold A$的极大线性无关组$\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_p}$扩充成$\left[ \bold A, \bold B\right]$的极大线性无关组，
+\\设为$\boldsymbol{\alpha_1},\boldsymbol{\alpha_2},\boldsymbol{\alpha_3}, \cdots ,\boldsymbol{\alpha_p},\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3}, \cdots ,\boldsymbol{\beta_w}$，显然$w\leq q$，故有
+\\$rank(\left[ \bold A, \bold B\right] )=p+w\leq p+q =rank(\bold A)+rank(\bold B)$
+\\故$rank(\bold A + \bold B)\leq rank(\left[ \bold A, \bold B\right] )\leq rank(\bold A)+rank(\bold B)$
+
+
+\item 将$\bold A,\bold A \bold B$按行分块为
+$\begin{bmatrix}\boldsymbol{\beta_1}\\ \boldsymbol{\beta_2} \\ \vdots \\ \boldsymbol{\beta_n} 
+\end{bmatrix},
+\bold A \bold B=\bold C=
+\begin{bmatrix}\boldsymbol{\gamma_1}\\ \boldsymbol{\gamma_2} \\ \vdots \\ \boldsymbol{\gamma_m} 
+\end{bmatrix}$，于是
+\\$\bold A \bold B=\begin{bmatrix}
+a_{11} & a_{12}  & \cdots & a_{1n}      \\
+a_{21} & a_{22}  & \cdots & a_{2n}      \\
+\vdots & \vdots & \   & \vdots    \\
+a_{m1} & a_{m2}  & \cdots & a_{mn}
+\end{bmatrix}
+\begin{bmatrix}\boldsymbol{\beta_1}\\ \boldsymbol{\beta_2} \\ \vdots \\ \boldsymbol{\beta_n} 
+\end{bmatrix} =
+\begin{bmatrix} a_{11}\boldsymbol{\beta_1} + a_{12}\boldsymbol{\beta_2}  + \cdots + a_{1n}\boldsymbol{\beta_n}
+\\ a_{21}\boldsymbol{\beta_1} + a_{22}\boldsymbol{\beta_2}  + \cdots + a_{2n}\boldsymbol{\beta_n}
+\\ \cdots
+\\ a_{m1}\boldsymbol{\beta_1} + a_{m2}\boldsymbol{\beta_2}  + \cdots + a_{mn}\boldsymbol{\beta_n}
+\end{bmatrix} 
+=\begin{bmatrix}\boldsymbol{\gamma_1}\\ \boldsymbol{\gamma_2} \\ \vdots \\ \boldsymbol{\gamma_m} 
+\end{bmatrix}$
+\\所以$\bold A \bold B$的行向量$\boldsymbol{\gamma_m}(i=1,2,3,\cdots,m)$均可由$\bold B$的行向量线性表出，故
+\\$rank(\bold A \bold B)\leq rank(\bold B)$.
+\\同理可证$rank(\bold A \bold B)\leq rank(\bold A)$，故有$rank(\bold A \bold B)\leq min\{ rank(\bold A),rank(\bold B) \}$.
+\\如果$rank(\bold A \bold B )=n$
+\\则$ n\leq rank(\bold A )\leq min(m,n),n\leq rank(\bold B )\leq min(n,q)$
+\\所以$\bold A$列满秩，$\bold B$行满秩
+
+
+\item 设$\bold A $的列空间为$\mathcal{R}(A)=\{ \alpha\in \mathbb{R}^n  \mid \alpha =Ax_1,x_1\in \mathbb{R}^n\}$，设$\bold B$的列空间为$\mathcal{R}(B)=\{ \beta\in \mathbb{R}^n  \mid \beta =Ax_2,x_2\in \mathbb{R}^p\}$，设$\bold A \bold B$的列空间为$\mathcal{R}(\left[ A\mid B\right])=\{ \gamma\in \mathbb{R}^m  \mid \gamma =\left[ A\mid B \right]x_3,x_3\in \mathbb{R}^{n+p}\}$,
+\\易知，$\mathcal{R}(\left[ A\mid B\right])$可和$\mathcal{R}(A)+\mathcal{R}(B)$相互线性表示，
+\\所以，$\mathcal{R}(\left[ A\mid B\right])=\mathcal{R}(A)+\mathcal{R}(B)$
+
+
+\item 设$\bold A $的列空间为$\mathcal{R}(A)=\{ \alpha\in \mathbb{R}^n  \mid \alpha =Ax_1,x_1\in \mathbb{R}^n\}$，设$\bold B$的列空间为$\mathcal{R}(B)=\{ \beta\in \mathbb{R}^n  \mid \beta =Ax_2,x_2\in \mathbb{R}^p\}$，设$\bold A \bold B$的列空间为$\mathcal{R}(\left[ A\mid B\right])=\{ \gamma\in \mathbb{R}^m  \mid \gamma =\left[ A\mid B \right]x_3,x_3\in \mathbb{R}^{n+p}\}$,
+\\易知，$\mathcal{R}(\left[ A\mid B\right])$可和$\mathcal{R}(A)+\mathcal{R}(B)$相互线性表示，
+\\所以，$\mathcal{R}(\left[ A\mid B\right])=\mathcal{R}(A)+\mathcal{R}(B)$
+
+	\end{enumerate}
+
+
+\end{enumerate}
+
+
+
+	
+
+
+
+
+\section{UNDERSTANDING SPAN, SUBSPACE}
+
+\begin{enumerate}
+	
+	\item \textbf{Solution:}
+	\begin{enumerate}
+	\item We hvve to prove that $span (S)\subseteq \mathcal M $ and $\mathcal M \subseteq span(S)$
+		\\ if $\mathcal V$ is a subspace and $span(\mathcal S) \subseteq \mathcal V$ then $span(\mathcal S) \subseteq \mathcal M$.
+		\\If $ \bold x\in span(\mathcal S)$ and $\mathcal V$ is any subspce containing $\mathcal S $,                                                                                                                                                                                                                                                                                                                                                                             
+		then $\mathcal V$ contains $\bold x $
+		(because $\bold x$ is a linear combinatinn of elements of $\mathcal S $). Hence $x$ belongs to the
+		intersection of all such $\mathcal V$,which is $\mathcal M$. Thus $span(\mathcal S)\subseteq \mathcal
+		S$.$ \ \mathcal M \subseteq span(\mathcal S)$ follows from the fact that $span(\mathcal S)$ is itself one of 				the subspaces containing $\mathcal S$
+
+
+	\end{enumerate}
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+	
+\section{BASIS, DIMENSION AND PROJECTION}
+
+\begin{enumerate}
+	
+	\item \textbf{Problem 1. Solution:}
+	\begin{enumerate}
+	\item The dimension of the space of polynomials having degree n is $n+1$
+	\item The dimension of the space of $n\times n$ symmetric matrices is $n(n+1)/2$
+	\end{enumerate}
+
+	\item \textbf{Problem 2. Solution:}
+	\begin{enumerate}
+	\item rotation matrix in $\mathbb{R}^{2\times 2}$ is $\begin{bmatrix}cos\theta & -sin\theta \\ sin\theta & cos\theta\end{bmatrix} $or$\begin{bmatrix}				cos\theta & sin\theta \\ -sin\theta & cos\theta\end{bmatrix} $
+
+
+	\item To rotate x by $\frac{7\pi}{12}$ in anti-clockwise direction,the $\mathbf R=\begin{bmatrix}cos\frac{7\pi}{12} & -sin\frac{7\pi}{12} \\  					sin\frac{7\pi}{12} & cos\frac{7\pi}{12}\end{bmatrix}$,so $\mathbf{Rx}=\begin{bmatrix}cos\frac{7\pi}{12} & -sin\frac{7\pi}{12} \\ sin\frac{7\pi}				{12} & cos\frac{7\pi}{12}\end{bmatrix}\begin{bmatrix}cos\frac{\pi}{4}\\ sin\frac{\pi}{4}\end{bmatrix}=$
+	
+
+
+	\item $\mathbf {Hx}=(1-2\mathbf{uu})^T\mathbf x=(1-\mathbf{uu})^T\mathbf x-\mathbf{uu}^T\mathbf x =\mathbf {Qx}-(\mathbf x-\mathbf {Qx})=\mathbf{Rx}$
+		\\ so, $\mathbf {Hx}$ is a reflection of x with respect to $\mathcal H_u$
+     \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+\section{DIRECT SUM}
+
+\begin{enumerate}
+	
+	\item \textbf{Problem 1. Solution:}
+	\begin{enumerate}
+	\item supposee the column maximal linearly independent subset of $\mathcal V$ is $\mathcal B = \{\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3},\cdots,\boldsymbol{\beta_n}\}$, because $\mathcal B = \mathcal B_1 \cup \mathcal B_2$ and $\mathcal B_1 \cap \mathcal B_2 = \emptyset $,
+\\so,I can suppose $\mathcal B_1 = \{\boldsymbol{\beta_1},\boldsymbol{\beta_2},\boldsymbol{\beta_3},\cdots,\boldsymbol{\beta_s}\}$ and $\mathcal B_2 = \{\boldsymbol{\beta_{s+1}},\boldsymbol{\beta_{s+2}},\boldsymbol{\beta_{s+3}},\cdots,\boldsymbol{\beta_n}\}$
+\\Then $dim(\mathcal B_1)+dim(\mathcal B_2)=n=dim(\mathcal B)=dim(\mathcal V)$
+\\so $\mathcal V = span(\mathcal B_1)\oplus span(\mathcal B_2)$
+	\end{enumerate}	
+
+
+	\item \textbf{Problem 2. Solution:}
+	\begin{enumerate}
+	\item supposee the column maximal linearly independent subset of $\mathcal V$ is $\{\boldsymbol{\nu_1},\boldsymbol{\nu_2},\boldsymbol{\nu_3},\cdots,\boldsymbol{\nu_n}\}$and $\mathcal S = \{\boldsymbol{\nu_1},\boldsymbol{\nu_2},\boldsymbol{\nu_3},\cdots,\boldsymbol{\nu_d}\} \ (d<n)$
+\\$\mathcal T = \{\boldsymbol{\nu_{d+1}},\boldsymbol{\nu_{d+2}},\boldsymbol{\nu_{d+3}},\cdots,\boldsymbol{\nu_n}\}$
+\\Then $dim(\mathcal S)+dim(\mathcal T)=n=dim(\mathcal V)$
+\\so $\mathcal V = span(\mathcal S)\oplus span(\mathcal T)$
+
+	\end{enumerate}
+
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{UNDERSTANDING THE MATRIX NORM}
+
+\begin{enumerate}
+	
+	\item \textbf{Solution:}
+	\begin{enumerate}
+	\item supppose $\bold A =\begin{bmatrix}a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \cdots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn}\end{bmatrix}$ and $\bold x =\begin{bmatrix}x_{1}\\ x_{2}\\ \vdots \\ x_{m}\end{bmatrix}$ and we have $\sum_{i=1}^n x_i=1$
+\\so $\bold {Ax}= \begin{bmatrix}a_{11}x_{1}+a_{12}x_{2}+\cdots +a_{1n}x_{n}\\ a_{21}x_{1}+a_{22}x_{2}+\cdots +a_{2n}x_{n}\\ \vdots \\a_{m1}x_{1}+a_{m2}x_{2}+\cdots +a_{mn}x_{n}\end{bmatrix}$
+\\Then $\left \| \bold A \right \|_1= \mathop{max}\limits_{\left \| \bold {x} \right \|_1=1}\left \| \bold {Ax} \right \|_1=max\{ (\sum_{i=1}^m a_{i1})x_1+(\sum_{i=1}^m a_{i2})x_2+\cdots +(\sum_{i=1}^m a_{in})x_n \}$\\
+\\and we know $\sum_{i=1}^n x_i=1$ to make the formula above be maximum,we should find the maximum $\sum_{i=1}^m a_{ij}$ ,then let $x_j =1$ and $\mathop{x_i}\limits_{i \not= j }=0$
+\\At last $\left \| \bold A \right \|_1= \mathop{max}\limits_{\left \| \bold {x} \right \|_1=1}\left \| \bold {Ax} \right \|_1= the\  largest\  absolute\  column\  sum$
+
+
+
+	\item supppose $\bold A =\begin{bmatrix}a_{11} & a_{12} & \cdots & a_{1n} \\ a_{21} & a_{22} & \cdots & a_{2n} \\ \vdots & \vdots & \cdots & \vdots \\ a_{m1} & a_{m2} & \cdots & a_{mn}\end{bmatrix}$ and $\bold x =\begin{bmatrix}x_{1}\\ x_{2}\\ \vdots \\ x_{m}\end{bmatrix}$ and we have $ \mathop{max}\limits_{i=1,2,\cdots,n} {\mid x_i \mid}=1$
+\\so $\bold {Ax}= \begin{bmatrix}a_{11}x_{1}+a_{12}x_{2}+\cdots +a_{1n}x_{n}\\ a_{21}x_{1}+a_{22}x_{2}+\cdots +a_{2n}x_{n}\\ \vdots \\a_{m1}x_{1}+a_{m2}x_{2}+\cdots +a_{mn}x_{n}\end{bmatrix} = \begin{bmatrix} \sum_{j=1}^n a_{1j}x_j \\ \sum_{j=1}^n a_{2j}x_j \\ \vdots \\ \sum_{j=1}^n a_{mj}x_j \end{bmatrix}$
+\\Then $\left \| \bold A \right \|_\infty= \mathop{max}\limits_{\left \| \bold {x} \right \|_\infty=1}\left \| \bold {Ax} \right \|_\infty=\mathop{max}\limits_{i}\{ \sum_{j=1}^n a_{ij}x_j   \}$
+\\and we know $ \mathop{max}\limits_{i=1,2,\cdots,n} {\mid x_i \mid}=1$ to make the formula above be maximum,
+\\we should let $x_1=x_2= \cdots = x_n=1$
+\\so the maximum $\mathop{max}\limits_{i}\{ \sum_{j=1}^n a_{ij}x_j \}=\mathop{max}\limits_{i}\{ \sum_{j=1}^n a_{ij}\}= the\  largest\  absolute\  column\  sum$
+
+	\end{enumerate}
+
+\end{enumerate}
+
+
+
+
+\section{UNDERSTANDING THE HÖLDER INEQUALITY}
+
+\begin{enumerate}
+	
+	\item \textbf{Solution:}
+	\begin{enumerate}
+	\item first if $\beta =0 \ \alpha^\lambda \beta^{1-\lambda}\leq \lambda\alpha+(1-\lambda)\beta
+		\  \Leftrightarrow\   		\lambda\alpha \ge 0$,this is clearly established
+		\\then if $\beta >0 $  $\alpha^\lambda \beta^{1-\lambda}\leq \lambda\alpha+(1-\lambda)\beta\ 
+		\Leftrightarrow\  \alpha^\lambda 				\beta^{-\lambda}\leq \lambda \frac{\alpha}{\beta}+(1
+		-\lambda)\  \Leftrightarrow\  (\frac{\alpha}{\beta})^{\lambda}\leq \lambda \frac{\alpha}{\beta}+(1-\lambda)
+		\  \Leftrightarrow\  t^{\lambda}\leq \lambda t+(1-\lambda)$ where $t=\frac{\alpha}{\beta}\ge 0$ 
+		\\so the question is equal to prove $f(t)\ge 0$
+		\\Derivative of a function $f(t)$ is $f^{'}(t)=\lambda-\lambda t^{\lambda-1},\ 0<\lambda<1$
+		\\it's easy to find when $t \in [0,1),f^{'}(t)\ge 0$ and when $t>1,f^{'}(t)\leq 0$
+		\\we also find $f(1)=0$,so $f(t)\ge 0$
+		\\so $\alpha^\lambda \beta^{1-\lambda}\leq \lambda\alpha+(1-\lambda)\beta$
+	
+	\item first we prove when $x>0,y>0,p>0,q>0,\frac{1}{p}+\frac{1}{q}=1$,then $xy\leq \frac{x^p}{p}+\frac{y^q}{q}$
+		\\the above is equal to prove $ln(xy)\leq ln(\frac{x^p}{p}+\frac{y^q}{q})$
+		\\because $x>0$,suppose $f(x)=ln(x) \Rightarrow f^{''}(x)= -\frac{1}{x^2}<0 \Rightarrow f(x）$'s image is 					raised,then use concavity and convexity definition,we have $f[\lambda x_1 +(1-\lambda)y_1]\ge \lambda
+			f(x_1)+(1-\lambda)f(y_1)$.
+		\\in the above formula,command $\lambda=\frac{a}{p},x_1=x^p,y_1=y^q$,then $1-\lambda=1-\frac{1}{p}=\frac{1}
+			{q}$,so we get
+		\\$ln(\frac{x^p}{p}+\frac{y^q}{q})\ge \frac{1}{p}f(x^p)+\frac{1}{q}f(y^q)=ln(xy)$
+		\\so we get $xy\leq \frac{x^p}{p}+\frac{y^q}{q}$
+		\\so $\sum_{i=1}^n \mid \hat{x_i}\hat{y_i} \mid \leq \sum_{i=1}^n ( \frac{1}{p} \mid \hat{x_i} \mid^p + 
+			\frac{1}{q}\mid \hat{y_i} \mid^q ) = \frac{1}{p}\sum_{i=1}^n \mid \hat{x_i} \mid^p  + \frac{1}{q}
+			\sum_{i=1}^n \mid \hat{y_i} \mid^q $
+		\\and bucasue $\hat{x_i}=\frac{x_i}{(\sum_{i=1}^n \mid {x_i} \mid^p)^\frac{1}{p}},\hat{y_i}=
+			\frac{y_i}{(\sum_{i=1}^n \mid {y_i} \mid^q)^\frac{1}{q}}$\\
+		\\so $\sum_{i=1}^n \mid \hat{x_i}\hat{y_i} \mid \leq \frac{1}{p}\sum_{i=1}^n \mid \hat{x_i} \mid^p  +
+			\frac{1}{q}\sum_{i=1}^n \mid \hat{y_i} \mid^q 
+			=\frac{1}{p}+\frac{1}{q}=1$
+
+
+	\item with the above results,because $\bold{x}=\left \| \bold x \right \|_p \bold{\hat x},\ \ \bold{y}=\left \|
+		\bold y \right \|_q \bold{\hat y}$
+		\\so $\mid \bold{x^Ty} \mid=\left \| \bold x \right \|_p \left \| \bold y \right \|_q \mid \bold
+		{\hat{x}}^T\bold {\hat{y}} \mid = \left \| \bold x \right \|_p \left \| \bold y \right \|_q\sum_{i=1}^n \mid
+		\hat{x_i}\hat{y_i} \mid \leq \left \| \bold x \right \|_p \left \| \bold y \right \|_q(\frac{1}{p}\sum_{i=1}			^n \mid \hat{x_i} \mid^p  +\frac{1}{q}\sum_{i=1}^n \mid \hat{y_i} \mid^q) = \left \| \bold x \right \|_p 				\left \| \bold y \right \|_q$
+		\\so $\mid \bold{x^Ty} \mid \leq \left \| \bold x \right \|_p \left \| \bold y \right \|_q $
+
+	\item Let $\bold u = (u_1,u_1,\cdots,u_n)$ with $u_i = \mid x_i +y_i \mid^{p-1}$.Since $q(p-1)=p$ and 
+		$\frac{p}{q}=p-1$,we find
+		$\left \| \bold u \right \|_q = (\sum_{i=1}^n |x_i+y_i|^{q(p-1)})^\frac{1}{q}= (\sum_{i=1}^n |x_i+y_i|					^p)^\frac{1}{q}= \left \| \bold x +\bold y \right \|_p^{\frac{p}{q}} =\left \| \bold x +\bold y \right \|				_p^{p-1} $
+		\\Using this and the Holder inequality we obtain
+		\\$\left \| \bold x +\bold y \right \|_p^p = \sum_{i=1}^n |x_i+y_i|^p \leq \sum_{i=1}^n |u_i||x_i|	+
+		\sum_{i=1}^n |u_i||y_i|	
+		\\ \leq (\left \| \bold x  \right \|_p+\left \| \bold y  \right \|_p)\left \| \bold u 
+		\right \|_q \leq (\left \| \bold x  \right \|_p+\left \| \bold y  \right \|_p)\left \| \bold x +\bold y 
+		\right \|_p^{p-1}$.
+		\\so $\left \| \bold x +\bold y \right \|_p \leq \left \| \bold x  \right \|_p+\left \| \bold y  \right \|_p $
+	
+		
+
+
+
+\end{enumerate}
+
+\end{enumerate}
+
+
+
+\end{document}
