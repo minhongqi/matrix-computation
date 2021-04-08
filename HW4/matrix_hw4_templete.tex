@@ -1,0 +1,767 @@
+\documentclass[english,onecolumn]{IEEEtran}
+\usepackage[T1]{fontenc}
+
+\usepackage[latin9]{luainputenc}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose}
+\usepackage{amsfonts}
+\usepackage{babel}
+\usepackage{ulem}
+
+\usepackage{extarrows}
+\usepackage[colorlinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+
+\usepackage{amsmath,graphicx}
+\usepackage{subfigure} 
+\usepackage{cite}
+\usepackage{amsthm,amssymb,amsfonts}
+\usepackage{textcomp}
+\usepackage{bm,pifont}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xparse}
+\usepackage{xcolor}
+\definecolor{salmon}{rgb}{1, 0.5020, 0.4471}
+
+\NewDocumentCommand{\codeword}{v}{
+\texttt{\textcolor{blue}{#1}}
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
+\topmargin            -18.0mm
+\textheight           226.0mm
+\oddsidemargin      -4.0mm
+\textwidth            166.0mm
+\def\baselinestretch{1.5}
+
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\Rbb}{\mathbb{R}}
+\newcommand{\Pb}{\mathbf{P}}
+\newcommand{\Ib}{\mathbf{I}}
+\newcommand{\vb}{\mathbf{v}}
+\newcommand{\Ucal}{\mathcal{U}}
+\newcommand{\Wcal}{\mathcal{W}}
+\newcommand{\Vcal}{\mathcal{V}}
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Ncal}{\mathcal{N}}
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\bigS}{\mathcal{S}}
+\newcommand{\bA}{{\bf A}}
+\newcommand{\bQ}{{\bf Q}}
+\newcommand{\bR}{{\bf R}}
+\newcommand{\bH}{{\bf H}}
+\newcommand{\bU}{{\bf U}}
+\newcommand{\bT}{{\bf T}}
+\newcommand{\bI}{{\bf I}}
+\newcommand{\bq}{{\bf q}}
+\newcommand{\bz}{{\bf z}}
+\newcommand{\bL}{{\bf L}}
+\newcommand{\bx}{{\bf x}}
+\newcommand{\bv}{{\bf v}}
+\newcommand{\bG}{{\bf G}}
+\def\A{\mathbf{A}}
+\def\v{\mathbf{v}}
+
+\begin{document}
+
+\begin{center}
+	\textbf{\LARGE{SI231 - Matrix Computations, Fall 2020-21}}\\
+	{\Large Homework Set \#4}\\
+	\texttt{Prof. Yue Qiu and Prof. Ziping Zhao}\\
+	\texttt{\textbf{Name:}}   	\texttt{ Min Hongqi }  		\hspace{1bp}
+	\texttt{\textbf{Major:}}  	\texttt{ IE } 	\\
+	\texttt{\textbf{Student No.:}} 	\texttt{ 2020E8018482005}     \hspace{1bp}
+	\texttt{\textbf{E-mail:}} 	\texttt{ minhq@sari.ac.cn}
+\par\end{center}
+
+\noindent
+\rule{\linewidth}{0.4pt}
+{\bf {\large Acknowledgements:}}
+\begin{enumerate}
+    \item Deadline: \textcolor{red}{\textbf{2020-11-20 23:59:00}}
+    \item Submit your homework at \textbf{Gradescope}.
+    Homework \#4 contains two parts, the theoretical part the and the programming part.
+    \item About the the theoretical part:
+    \begin{enumerate}
+            \item[(a)] Submit your homework in \textbf{Homework 4} in gradescope. Make sure that you have correctly select pages for each problem. If not, you probably will get 0 point.
+            \item[(b)] Your homework should be uploaded in the \textbf{PDF} format, and the naming format of the file is not specified.
+            \item[(c)] No handwritten homework is accepted. You need to use \LaTeX $\,$ in principle.
+            \item[(d)] Use the given template and give your solution in English. Solution in Chinese is not allowed. 
+        \end{enumerate}
+  \item About the programming part:
+  \begin{enumerate}
+      \item[(a)] Submit your codes in \textbf{Homework 4 Programming part} in gradescope. 
+      \item[(b)] When handing in your homework in gradescope, package all your codes into {\sf your\_student\_id+hw4\_code.zip} and upload. In the package, you also need to include a file named {\sf README.txt/md} to clearly identify the function of each file.
+     \item[(c)] Make sure that your codes can run and are consistent with your solutions.
+  \end{enumerate}
+  \item \textbf{Late Policy details can be found in the bulletin board of Blackboard.}
+\end{enumerate}
+\rule{\linewidth}{0.4pt}
+
+\section*{Study Guide}
+\noindent
+This homework concerns the following topics:
+\begin{itemize}
+    \item Eigenvalues, eigenvectors \& eigenspaces 
+    \item Algebraic multiplicity \& geometric multiplicity
+    \item Eigendecomposition (Eigvenvalue decomposition) \& Eigendecomposition for Hermitian matrices
+    \item Similar transformation, Schur decomposition \& 
+    Diagonolization
+    \item Variational characterizations of eigenvalues
+	\item Power iteration \& Inverse iteration
+	\item QR iteration \& Hessenberg QR iteration
+	\item Givens QR \& Householder QR (from previous lectures)
+\end{itemize}
+
+
+\newpage 
+\section{Understanding eigenvalues and Eigenvectors}
+
+\noindent\textbf{Problem 1}. {\color{blue}(6 points + 4 points)}
+
+\noindent
+Consider the $2\times 2$ matrix \[ {\bf A} = \begin{bmatrix}
+           -4 & -3 \\
+            6 & 5
+    \end{bmatrix}\,.    \]
+\begin{enumerate}
+    \item 
+    Determine whether $\bA$ can be diagonalized or not. Diagonalize $\bA$ by ${\bf A} = {\bf V}{\bf \Lambda}{\bf V}^{-1}$ if the answer is "yes" or give the reason if the answer is "no".
+    
+    \item  Give the eigenspace of ${\bf A}$. 
+    And then consider: 
+    is there a matrix being similar to ${\bf A}$  but have different eigenspaces with it.
+    If the answer is "yes", show an example (here you are supposed to give the specific matrix and its eigenspaces), or else explain why the answer is "no" .
+\end{enumerate}
+
+{\bf Remarks:} 
+\begin{itemize}
+    \item In 1), if {\bf A} can be diagonalized, you are supposed to present not only the specific diagonalized matrix but also how do you get the similarity transformation.
+    If not, you should give the necessary derivations of the specific reason.
+    \item In 2), if your answer is "yes", you are supposed to give the specific matrix and its eigenspaces.
+    If "no", you should give the necessary derivations of the specific reason.
+\end{itemize}
+
+\noindent
+\textbf{Solution.}
+\begin{enumerate}
+    \item
+    $|\lambda E-A|=\left|\begin{array}{cc}\lambda+4 & 3  \\ -6 & \lambda-5\end{array}\right|=(\lambda-2)(\lambda+1)$\\\\\\
+    $\therefore \lambda_{1}=2, \lambda_{2}=-1
+    \therefore \Lambda=\left[\begin{array}{cc}2& \\ &-1\end{array}\right]$\\\\
+    $\therefore A$ can be diagonalized\\\\
+    $2 E-A=\left[\begin{array}{cc}6 & 3 \\ -6 & -3\end{array}\right] \rightarrow\left[\begin{array}{cc}2 & 1 \\ 0 & 0\end{array}\right] \Rightarrow v_{1}=\left[\begin{array}{cc}1 & -2\end{array}\right]^{\top}$\\\\
+    $-E-A= \left[\begin{array}{cc}3 & 3 \\ -6 & -6\end{array}\right] \rightarrow\left[\begin{array}{cc}1 & 1 \\ 0 & 0\end{array}\right] \Rightarrow v_{2}=\left[\begin{array}{cc}1 & -1\end{array}\right]^{\top}$\\\\
+    $\therefore V=\left[\begin{array}{ll}v_1 & v_{2}\end{array}\right]=\left[\begin{array}{cc}1 & 1\\ -2 & -1\end{array}\right]$\\
+    then $ A=V \Lambda V^{-1}$
+    \item 
+    the eigenspace of $A$ is $\mathcal A=\operatorname{span}\left\{v_{1}, v_{2}\right\}$\\
+    if $A \sim B,$ then exist invertible matrix $P$,\\
+    $s, t . \quad b=P^{-1} A P$\\
+    $\because A x=\lambda x$\\
+    $\therefore A x=P B P^{-1} x=\lambda x$\\
+    $\therefore B\left(P^{-1} x\right)=\lambda\left(P^{-1} x\right)$\\
+    $\therefore$ the eigenspace of $B$ is $B=\operatorname{span}\left\{P^{-1} v, P^{-1} v_{2}\right\}$\\
+    $\therefore \  if\quad P\neq I$\\
+    then $\lambda \neq B$
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\noindent\textbf{Problem 2}. \textcolor{blue}{(6 points $\times$ 5)}
+
+\noindent
+For a matrix ${\bf A}\in \mathbb{C}^{n\times n}$, 
+$\lambda_1, \lambda_2, \ldots, \lambda_n$   are its $n$ eigenvalues 
+(though some of them may be the same). 
+Prove that:
+\begin{enumerate}
+    \item The matrix ${\bf A}$ is singular if only if 0 is an eigenvalue of it.
+    \item ${\sf rank}({\bf A}) \geq$ number of nonzero eigenvalues of ${\bf A}$.
+    \item If ${\bf A}$ admits an  eigendecomposition (eigenvalue decomposition), ${\sf rank}({\bf A}) =$ number of nonzero eigenvalues of ${\bf A}$.
+    \item If $\A$ is Hermitian, then all of eigenvalues of $\bA$ are real.
+    \item If $\A$ is Hermitian, then eigenvectors corresponding to different eigenvalues are orthogonal.
+\end{enumerate}
+
+\noindent
+\textbf{Solution}
+\begin{enumerate}
+    \item 
+    $$
+    \begin{aligned}
+    	\text { necessity: } & \because|A|=\prod_{i=1}^{n} \lambda_{i} \\
+    	& \text { if } 0 \text { is an eigenvalue of } A \text { . then } \prod_{i=1}^{n} \lambda_{i}=0 \\
+    	& \therefore|A|=0 \quad \text { and } A \text { is singular } \\
+    	\text { sufficiency: }  & \because|A|=\prod_{i=1}^{n} \lambda_{i} \\
+    	& \therefore \text { if }|A|=0 \\
+    	& \Rightarrow \text { there must be a } 0 \text { eigenvalue }
+    \end{aligned}
+    $$
+    \item 
+    suppose $\lambda_{i}$ is the eigen values of $A$\\
+    $\mu_{i}$ is the algebraic multiplicity of the eigen $\lambda_{i}=0$\\
+    $\gamma_{i}$ is the geometric multiplicity of the eigen $\lambda_{i}=0$\\
+    we can get   
+    $$
+    \operatorname{rank}(A)=n-\operatorname{dim} N(A)
+    $$
+    $$
+    \text { number of nonzero eigenvalues of } A=n-\mu_i
+    $$
+    $\because \mu_{i} \geqslant \gamma_{i}$\\
+    $\therefore$ rank $(A) \geqslant$ number of nonzero eigenvalues of $A$
+    \item
+    If $A$ admits an eigendecom position\\
+    then there exists an invertible matrix that satisfies $P^{-1} A P=\Lambda$\\
+    $\therefore \operatorname{rank}(A)=r\left(p^{-1} A P\right)=r(\Lambda)=$
+    number of nonzero eigenvalues of ${\bf A}$.
+    \item
+    Let $\lambda$ be an arbitrary eigenvalue of $A$ and $\mathbf{x}$ is the eigenvector of $A$ associated with $\lambda$.
+    Then,
+    $
+    A \mathbf{x}=\lambda \mathbf{x}
+    $\\
+    Then we can get, 
+    $$
+    \begin{aligned} \mathbf{x}^{\mathrm{H}}(A \mathbf{x}) &=\mathbf{x}^{\mathrm{H}}(\lambda \mathbf{x}) \\ &=\lambda \mathbf{x}^{\mathrm{H}} \mathbf{x} \\ &=\lambda\|\mathbf{x}\| \end{aligned}
+    $$
+    We also have
+    $$
+    \mathbf{x}^{\mathrm{H}}(A \mathbf{x})=(A \mathbf{x})^{\mathrm{T}} \mathbf{x}^{*}=\mathbf{x}^{\mathrm{T}} A^{\mathrm{T}} \mathbf{x}^{*}
+    $$
+    so
+    $$
+    \mathbf{x}^{\mathrm{T}} A^{\mathrm{T}} \mathbf{x}^{*}=\lambda\|\mathbf{x}\|
+    $$
+    Taking the complex conjugate of this equality, we have
+    $$
+    \mathbf{x}^{\mathrm{H}} \bold{A}^{\mathrm{H}} \mathbf{x}=\lambda^{*}\|\mathbf{x}\|
+    $$
+    because $A^{\mathrm{H}}=A$ so,
+    $$
+    \begin{array}{l}
+    	\lambda^{*}\|\mathbf{x}\| = \mathbf{x}^{\mathrm{H}} A \mathbf{x} \\
+    	\quad = \mathbf{x}^{\mathrm{H}} \lambda \mathbf{x} \\
+    	\quad=\lambda\|\mathbf{x}\|
+    \end{array}
+    $$
+    $\because \mathbf{x}$ is an eigenvector, $\therefore \mathbf{x}\ne 0$ and  $\|\mathbf{x}\| \neq 0$.
+    Therefore,
+    $$
+    \lambda=\lambda^{*}
+    $$
+    
+    
+    
+    
+    
+    \item
+    $x$ is the eigenvector of $A$ associated with $\lambda$,\\
+    y is the eigen vector of $A$ associated with $\lambda_{2}$\\
+    $so, \quad A x=\lambda_{1} x \quad, \quad A y=\lambda_{2} y$\\
+    we can get
+    $$
+    \begin{aligned}
+    	\langle x, A y\rangle &=(A y)^{H} x=y^{H} A^{H} x=y^{H} A x=y^{H} \lambda_{1} x \\
+    	&=\lambda_{1} y^{H} x=\lambda_{1}\langle, y\rangle
+    \end{aligned}
+    $$
+    and $\langle x, A y\rangle$ also equal to
+    $$
+    \langle x, A y\rangle=\langle x, \lambda_{2} y\rangle=\lambda_{2}^{H} y^{H} x=\lambda_{2}\langle x, y\rangle.
+    $$
+    since $\lambda_{2}^{H}=\lambda_{\nu}$ because A is Hermitian
+    so we get\\
+    $\lambda_{1}\langle x, y\rangle=\lambda_{2}\langle x, y\rangle$
+    $\Rightarrow\left(\lambda_{1}-\lambda_{2}\right)\langle x, y\rangle=0$\\
+    Therefore $\quad \lambda_{1} \neq \lambda_{2} \Rightarrow<x, y>=0$
+\end{enumerate}
+
+\clearpage
+\section{Understanding The Eigenvalues of Real Symmetric Matrices}
+\noindent\textbf{Problem 3}. \textcolor{blue}{(12 points)}
+\noindent 
+Let $\bA\in \Rbb^{n\times n}$ be a symmetric matrix, $\bigS_k$ denote a subspace of $\Rbb^n$ of dimension $k$, and $\lambda_1\geq \lambda_2\geq...\geq \lambda_n$ represent the eigenvalues of $\bA$. 
+For any $k\in\{1,2,3,...,n\}$, prove that \[\lambda_k=\min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T\bA\bx.\]
+
+\noindent
+\textbf{Solution.}\\
+$A \in R^{n\times n}$ is a symmetric matrix. \\
+$\therefore$ A have $n$ orthogonal eigenvectors.\\
+suppose $u_{1}, u_{2}, \cdots, u_{n}$ are $n$ orthogoral
+eigenvectors,\\
+and $u_i$  represents the eigenvectors of $A$ associated to $\lambda_{i}$\\
+Then we will have $u_{i}^{\top} u_{j}=0 \quad$ for $i \neq j$\\
+$\begin{aligned} \text { suppose } x &=\sum_{i=1}^{k} \alpha_{i} u_{i}, \quad U=\operatorname{span}\left\{u_{1}, u_{2}, \cdots, u_{k}\right) \\ \text { then } x^{\top} A x &=\left(\sum_{i=1}^{k} \alpha_{i} u_{i}^{\top}\right)\left(\sum_{i=1}^{k} \alpha_{i} A u_{i}\right) \\ &=\left(\sum_{i=1}^{k} \alpha_{i} u_{i}^{\top}\right)\left(\sum_{i=1}^{k} \alpha_{i} \lambda_{i} u_{i}\right) \\ &=\sum_{i=1}^{k} \lambda_{i} \alpha_{i}^{2} u_{i}^{\top} u_{i} \end{aligned}$\\
+when $\|x \|_{2}=1, then \ \sum_{i=1}^{k} \alpha_{i}^{2} u_{i}^{7} u_{i}=1.$\\
+$\therefore x^{\top} A x \geqslant \lambda_{k} \sum_{i=1}^{k} \alpha_{i}^{2} u_{i}^{\top} u_{i}=\lambda_{k}$\\
+and $\because \operatorname{dim} u+d i m \int_{n-k+1}=n+1 \quad>n$\\
+and $\therefore$ there must exist a $x \in S_{n-k+1}$ \\
+so, $\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T\bA\bx\ge \lambda_k$\\
+and because the equation was set up of any $S_{n-k+1}$\\
+$\therefore \quad \min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T\bA\bx\ge \lambda_k$\\\\
+
+On the other hand, if we suppose $x=\sum_{i=k}^{n} \alpha_{i} u_{i}$
+it's easy to find $\left.x \in V\quad V=\operatorname{span} \{ u_{k}, u_{k+1}, \quad \cdots, u_{n}\right\}$ and
+$$
+x^{\top} A x=\sum_{i=k}^{n} \lambda_{i} \alpha_{i}^{2} u_{i}^{\top} u_{i} \leq \lambda_{k} \sum_{i=k}^{n} \alpha_{i}^{2} u_{i}^{\top} u_{i}=\lambda_{k}
+$$
+so, $\max\limits_{\bx\in V,||\bx||_2=1} \bx^T\bA\bx\leq \lambda_k$\\
+And V is obviously one of the subspaces of $S_{n-k+1}$, so\\
+$\min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T\bA\bx\leq \lambda_k$
+\\\\
+$\therefore \quad \min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T\bA\bx= \lambda_k$
+
+
+
+\newpage
+\noindent\textbf{Problem 4}. \textcolor{blue}{(5 points+8 points+10 points)}
+\noindent To assist the understanding of this problem, we first provide some \textbf{basic concepts of graph theory:}
+ 
+\ding{172} A \textit{simple graph} $G$ is a pair $(V,E)$, such that
+\begin{itemize}
+	\item 
+	$V$ is the set of vertices;
+	
+	\item 
+	$E$ is the set of edges and every edge is denoted by an \textit{unordered} pair of its two \textit{distinct} vertices.
+\end{itemize}
+
+
+\ding{173} If $i,j$ are two distinct vertices and $(i,j)$ is an edge, we then say that $i$ and $j$ are \textit{adjacent}. A graph is called $d$-regular graph if every vertex in the graph is adjacent to $d$ vertices, where $d$ is a positive integer.
+
+\ding{174} Given two graphs $G_1=(V_1,E_1)$ and $G_2=(V_2,E_2)$, if $V_1\subset V_2$ and $E_1\subset E_2$, we call $G_1$ the \textit{subgraph} of $G_2$. 
+Furthermore,  we call $G_1$ the \textit{connected component} of $G_2$ 
+if 
+\begin{itemize}
+    \item 
+	any vertex in $G_1$ is only connected to vertices in $G_1$.
+	\item 
+	any two vertices in $G_1$ are connected either directly or via some other vertices in $G_1$;
+\end{itemize}
+\vspace{3mm}
+\noindent 
+Suppose $G=(V,E)$ is a simple graph with $n$ vertices indexed by $1,2,...,n$ respectively. 
+The adjacency matrix of $G$ is a matrix $\bA\in \Rbb^{n\times n}$ given by
+
+\begin{equation}
+\bA_{i,j}=\left\{
+\begin{aligned}
+1 &, \text{ if vertex } i \text{ and vertex } j \text{ are adjacent;}\\
+0 &, \text{ otherwise.}
+\end{aligned}
+\right.
+\end{equation}
+Besides, if $G$ is a $d$-regular graph, its \textit{normalized Laplacian matrix} $\bL$ is defined as $\bL\triangleq \bI-\frac{1}{d}\bA$, where $\bI$ is the identity matrix. 
+Let $\lambda_1\geq \lambda_2\geq...\geq \lambda_n$ denote the eigenvalues of $\bL$. 
+Please prove the following propositions:
+\begin{enumerate}
+    \item For any vector $\bx \in \Rbb^n$, it follows that 
+	\begin{equation}
+	\label{C1+}
+		\bx^T\bL\bx=\frac{1}{d}\sum_{(i,j)\in E}(\bx_i-\bx_j)^2,
+	\end{equation} 
+	where $i,j$ represent two distinct vertices and $(i,j)\in E$ represents an edge between $i$ and $j$ in the graph $G$.
+	\item $\lambda_n=0$ and $\lambda_1\leq 2$.
+	\item {\color{blue}(\textbf{Bonus Problem)}} the graph $G$ has at least $(n-k+1)$ connected components if and only if $\lambda_k=0$. 
+\end{enumerate}
+
+
+
+\noindent\textbf{Hint:} 
+The matrix $\bL$ is real and symmetric. 
+	You can directly utilize Courant-Fischer Theorem without proof. Particularly, you may need to utilize the min-max form of the Courant-Fischer Theorem for the Bonus Problem.
+
+
+\noindent
+\textbf{Solution}
+\begin{enumerate}
+    \item 
+    I find it is more general to represent
+    $L=I-D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$ than $L=I-\frac{1}{d} A$, and $L=I-\frac{1}{d} A$ is a specific
+    case that all $d_i$ are the same.
+    so in the cronse of $\mathrm{my}$ proof, 1 use $L=I-D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$
+    and then simplify it.
+    The degree matrix $D \in \mathbb{R}^{n \times n}$ is defined as the diagonal matrix with diagonal entries $\left(d_{1}, \ldots, d_{n}\right)$\\
+    Laplacian matrix $\bL$ is defined as $\bL=D^{-1 / 2}(D-A )D^{-1 / 2}  = \bI-D^{-1 / 2}\bA D^{-1 / 2}$,
+    $$
+    \begin{aligned}
+    	x^{T} L x &=x^{T} x-x^{T} D^{-1 / 2} A D^{-1 / 2} x \\
+    	&=\sum_{i} x_{i}^{2}-\sum_{i, j} \frac{x_{i}}{\sqrt{d}_{i}} A_{i j} \frac{x_{j}}{\sqrt{d_{j}}} \\
+    	&=\sum_{i} d_{i}\left(\frac{x_{i}}{\sqrt{d_{i}}}\right)^{2}-\sum_{(i, j) \in E} \frac{x_{i}}{\sqrt{d}_{i}} \cdot \frac{x_{j}}{\sqrt{d_{i}}} \\
+    	&=\sum_{\{i, j\} \in E}\left(\frac{x_{i}}{\sqrt{d_{i}}}-\frac{x_{j}}{\sqrt{d_{j}}}\right)^{2}\\
+    	&=\frac{1}{d}\sum_{(i,j)\in E}(\bx_i-\bx_j)^2
+    \end{aligned}
+    $$
+    
+    \item First. according to the definition of $L$ and degree
+    matrix $D$, we know that $(D-A) e=0$, in which
+    $e=(1,1, \cdots, 1]^{\top},$ so e is a eigenvector of $D-A$ corresponding to eigenvalue $0 .$\\
+    Then we can find
+    $$
+    L\left(D^{1 / 2} e\right)=D^{-1 / 2} (D-A) D^{-1 / 2} D^{1 / 2} e=D^{-1 / 2} (D-A) e=0
+    $$
+    $\therefore D^{1 / 2} e$ is an eigenvector of L of eigenvalue $0 .$\\ 
+    for any $x \in \mathbb{R}^{n}$,we can get
+    $$
+    \begin{aligned}
+    	x^{T} L x &=x^{T}(I-D^{-1 / 2}\bA D^{-1 / 2}) x \\
+    	&=\sum_{i \in V} x(i)^{2}-\sum_{(i, j) \in E} \frac{2 x(i) x(j)}{\sqrt{d(i) d(j)}} \\
+    	&=\sum_{(i, j) \in E}\left(\frac{x(i)}{\sqrt{d(i)}}-\frac{x(j)}{\sqrt{d(j)}}\right)^{2} \\
+    	& \geq 0
+    \end{aligned}
+    $$
+    $\therefore$ L is positive semidefinite\\
+    $\because \lambda_{1} \geq \lambda_{2} \geq \ldots \geq \lambda_{n}$\\
+    $\therefore$ L has nonnegative eigenvalues, so $\lambda_{1}=0$.\\
+     
+    Suppose $\alpha_{1} \geq \cdots \geq \alpha_{n}$ are the eigenvalues of $D^{-1 / 2}\bA D^{-1 / 2}$, and it's easy to know $\lambda_{i}=1-\alpha_{n+1-i}$\\
+    We can use the same way to prove $2$ is positive semidenite\\
+    $x^{T}(I+D^{-1 / 2}\bA D^{-1 / 2}) x=\sum_{i \in V} x(i)^{2}+\sum_{(i, j) \in E} \frac{2 x(i) x(j)}{\sqrt{d(i) d(j)}}=
+    \sum_{(i, j) \in E}\left(\frac{x(i)}{\sqrt{d(i)}}+\frac{x(j)}{\sqrt{d(j)}}\right)^{2} \geq 0$\\
+    so, $x^{T} x+x^{T} A x \geq 0 \Longrightarrow \frac{x^{T} (D^{-1 / 2}\bA D^{-1 / 2}) x}{x^{T} x} \geq-1$ \\
+    use Rayleigh-Ritz Theorem, $\Longrightarrow \alpha_{n} \geq-1$\\
+    and $\because L=I-D^{-\frac{1}{2}} A D^{-\frac{1}{2}}$\\
+    $\therefore \quad \lambda_{1}=1-a_{n}$\\
+    $\therefore \quad \lambda_{1} \leq 2$\\    
+    
+    \item
+    because $L\in R^{n\times n}$ is a symmetric matrix\\
+    We have $\lambda_k= \min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1} \bx^T L\bx=\min\limits_{\bigS_{n-k+1}\subseteq \Rbb^n}\max\limits_{\bx\in\bigS_{n-k+1},||\bx||_2=1}\frac{1}{d}\sum_{(i,j)\in E}(\bx_i-\bx_j)^2 $\\
+        
+    Necessity:\\ 
+    If $\lambda_{k}=0,$ there must exist a $n-k+1$ dimensional subspace $S_{n-k+1}$ such that for every $\mathrm{x} \in S_{n-k+1}$ and every $\{i, j\} \in E,$ we have $x_{i}=x_{j},$\\ 
+    This means that each $\mathrm{x} \in S_{n-k+1}$ must be constant within each connected component of $G,$ and so the dimension of $S_{n-k+1}$ can be at most the number of connected components of $G,$ meaning that $G$ has at least $n-k+1$ connected components.\\
+    
+    Sufficiency:\\ 
+    Conversely, if $G$ has at least $n-k+1$ connected components, we can let $S_{n-k+1}$ be the space of vectors that are constant within each component, and $S_{n-k+1}$ is a space of dimension at least $n-k+1$ such that for every element $\mathrm{x}$ of $S_{n-k+1}$ we have
+    $$
+    \sum_{\{i, j\} \in E}\left(x_{i}-x_{j}\right)^{2}=0
+    $$
+    meaning that $S_{n-k+1}$ is a witness of the fact that $\lambda_{k}=0$.
+    
+    
+    
+    
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section{Eigenvalue Computations}
+\subsection{Power Iteration} 
+\noindent
+\textbf{Problem 5.}
+\textcolor{blue}{(20 points)}
+
+Consider the $2\times 2$ matrix $\bA$
+\[
+\bA = \begin{bmatrix}
+	0 & \alpha \\
+	\beta & 0
+\end{bmatrix}\,,\quad \text{ with }\alpha,\beta > 0\,.
+\]
+\begin{enumerate}
+    \item Find the eigenvalues and eigenvectors of $\bA$ by hand. \textcolor{blue}{(5 points)}
+    \item Program \textbf{the power iteration} (See Algorithm \ref{alg:power_iter}) and \textbf{the inverse iteration} (See Algroithm \ref{alg:inverse_iter}) respectively and report the output of two algorithms for $\bA$ (you can determine $\alpha,\beta$ by yourself), do the two algorithms converge or not? Report what you have found (you can use plots to support your analysis). \textcolor{blue}{(10 points: programming takes 5 points and the analysis takes 5 points)}
+    After a few iterations, the sequence given by the power iteration fails to converge, explain why. \textcolor{blue}{(5 points)}
+    (\textbf{After-class exercise:} If you want, you can study the case for other randomly generated matrices.)
+\end{enumerate}
+\textbf{Remarks:}
+Programming languages are not restricted. In \codeword{Matlab}, you are free to use \codeword{[v,D] = eig(A)} to generate the eigenvalues and eigenvectors of $\bA$ as a reference to study  the convergence.
+
+\begin{algorithm}[htbp]
+	\label{alg:power_iter}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+	\caption{Power iteration}
+	\SetAlgoLined
+	\Input{$\bA \in \mathbb{C}^{n\times n}$}
+	\textbf{Initilization:} random choose $\bq^{(0)}$.\\
+	\For{$k= 1,\ldots, $}{
+		$\bz^{(k)} = \bA \bq^{(k-1)}$ \\
+		$\bq^{(k)} = \bz^{(k)}/ \|\bz^{(k)}\|_2$\\
+		$\lambda^{(k)} = (\bq^{(k)})^H\bA \bq^{(k)}$
+	}
+	\Output{$\lambda^{(k)}$}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+	\label{alg:inverse_iter}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+	\caption{Inverse iteration}
+	\SetAlgoLined
+	\Input{$\bA \in \mathbb{C}^{n\times n}$, $\mu$}
+	\textbf{Initilization:} random choose $\bq^{(0)}$.\\
+	\For{$k= 1,\ldots, $}{
+		$\bz^{(k)} = (\bA - \mu \bI)^{-1} \bq^{(k-1)}$ \\
+		$\bq^{(k)} = \bz^{(k)}/ \|\bz^{(k)}\|_2$\\
+		$\lambda^{(k)} = (\bq^{(k)})^H\bA \bq^{(k)}$
+	}
+	\Output{$\lambda^{(k)}$}
+\end{algorithm}
+\noindent
+\textbf{Solution}
+\begin{enumerate}
+    \item $|\lambda E-A|=\left[\begin{array}{cc}\lambda & -\alpha \\ -\beta & \lambda\end{array}\right]=\lambda^{2}-\alpha \beta=(\lambda+\sqrt{\alpha \beta})(\lambda-\sqrt{\alpha \beta})$\\
+    $\begin{aligned} \therefore \quad \lambda_{1} &=-\sqrt{\alpha\beta} \quad \lambda_{1} E-A=\left[\begin{array}{cc}-\sqrt{\alpha \beta} & -\alpha \\ -\beta & -\sqrt{\alpha \beta}\end{array}\right] \rightarrow\left[\begin{array}{cc}-\sqrt{\alpha \beta} & -\alpha \\ 0 & 0\end{array}\right] \\ \Rightarrow \quad v_{1} &=\left[\begin{array}{cc}1 & -\sqrt{\frac{\beta}{\alpha}}\end{array}\right]^{\top} \end{aligned}$\\
+    and $\lambda_{2}=\sqrt{\alpha \beta} \quad \lambda_{2} E-A=\left[\begin{array}{cc}\sqrt{\alpha \beta} & -\alpha \\ -\beta & \sqrt{\alpha \beta}\end{array}\right] \rightarrow\left[\begin{array}{cc}\sqrt{\alpha \beta}-\alpha \\ 0 & 0\end{array}\right]$\\
+    $\Rightarrow \quad v_{2}=\left[\begin{array}{cc}1 & \sqrt{\frac{\beta}{\alpha}}\end{array}\right]^{\top}$\\
+    so the eigenvalues are $\lambda_{1}=-\sqrt{\alpha\beta}$ and $\lambda_{2}=\sqrt{\alpha\beta}$\\
+    $v_1=\left[\begin{array}{cc}1 & -\sqrt{\frac{\beta}{\alpha}}\end{array}\right]^{\top}$ is the eigenvector of A associated with $\lambda_{1}$\\\\
+    $v_2=\left[\begin{array}{cc}1 & \sqrt{\frac{\beta}{\alpha}}\end{array}\right]^{\top}$ is the eigenvector of A associated with $\lambda_{2}$
+    
+    \item
+    In algorithms 1, $\lambda$ can't converge, $\lambda$ will oscillate between two different values, for example, if I choose $\alpha = 2 $ and $\beta = 8$, $q= [2\quad9]$, I will get $\lambda_{2k+1}=4.9655$ and $\lambda_{2k}=2.1176,\ k=0,1,...$, so it's not convergent\\
+    In algorithms 2, if $\mu>0$, $\lambda$ will converge to $4$; if $\mu<0$, $\lambda$ will converge to $-4$; if $\mu=0$, $\lambda$ will not converge, $\lambda$ will oscillate between two different values.\\
+    \\
+    In the power iteration $\vec{q}_{n+1}=A \vec{q}_{n}$ and we normalize each vector $\vec{q}_{n+1} \leftarrow \vec{q}_{n+1} /\left\|\vec{q}_{n+1}\right\| \cdot$ Note that
+    $$
+    A^{2}=\alpha\beta\left[\begin{array}{ll}
+    	1 & 0 \\
+    	0 & 1
+    \end{array}\right]=\alpha\beta I
+    $$
+    Thus, $\vec{q}_{2 n}=A^{2 n} \vec{q}_{0}=(\alpha\beta)c^{ n} \vec{q}_{0}$ with $\vec{q}_{0}=[1,1]^{\top}$. Normalizing vector gives
+    $$
+    \vec{q}_{2 n} \leftarrow \frac{1}{\sqrt{2}}\left[\begin{array}{l}
+    	1 \\
+    	1
+    \end{array}\right]
+    $$
+    While $\vec{q}_{2 n+1}=A^{2 n+1} \vec{q}_{0}=A A^{2 n} \vec{q}_{0}=(\alpha\beta)^{n} A \vec{q}_{0}=(\alpha\beta)^{n}[\alpha,\beta]^{\top}$. Normalizing gives
+    $$
+    \vec{q}_{2 n+1} \leftarrow \frac{1}{\sqrt{\alpha^{2}+\beta^{2}}}\left[\begin{array}{c}
+    	\alpha \\
+    	\beta
+    \end{array}\right]
+    $$
+    Iterations oscillate between these two vectors, thus the iterations do not converge.
+    
+    
+    
+\end{enumerate}
+
+
+\newpage 
+\subsection{QR itertiaon and Hessenberg QR iteration}
+\noindent
+\textbf{Recap.}
+For $\bA \in \mathbb{C}^{n\times n}$,
+consider the QR iteration (See Algorithm \ref{alg:qr_iter}) for finding all the eigenvalues and eigenvectors of $\bA$. 
+\begin{algorithm}[htbp]
+	\label{alg:qr_iter}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+	\caption{QR iteration}
+	\SetAlgoLined
+	\Input{$\bA \in \mathbb{C}^{n\times n}$}
+	\textbf{Initilization:} $\bA^{(0)} = \bA$.\\
+	\For{$k= 1,\ldots, $}{
+		$\bQ^{(k)}\bR^{(k)} = \bA^{(k-1)}$ \textcolor{blue}{\texttt{ \% Perform QR for $\bA^{(k-1)}$}}\\
+		$\bA^{(k)} = \bR^{(k)}\bQ^{(k)}$
+	}
+	\Output{$\bA^{(k)}$}
+\end{algorithm}
+In each iteration, $\bA^{(k)}$ is similar to $\bA$ in that 
+\begin{align*}
+ 	\bA^{(k)}
+ 	&  = \bR^{(k)}\bQ^{(k)} = (\bQ^{(k)})^H \bQ^{(k)}\bR^{(k)}\bQ^{(k)} = (\bQ^{(k)})^H \bA^{(k-1)}\bQ^{(k)}= \cdots \\
+ 	& = (\bQ^{(1)}\bQ^{(2)} \cdots \bQ^{(k)})^H \bA (\bQ^{(1)}\bQ^{(2)} \cdots \bQ^{(k)})  \Rightarrow \bA^{(k)} \text{ is similar to } \bA\,.
+\end{align*}
+Suppose the Schur decomposition of $\bA$ is $\bA = \bU \bT \bU^H$, then under some mild assumptions, $\bA^{(k)}$ converges to $\bT$.
+Therefore, we can compute all the eigenvalues of $\bA$ by taking the diagonal elements of $\bA^{(k)}$ for sufficiently large $k$.
+However, each iteration requires $\bigO(n^3)$ flops to compute QR factorization which is computationally expensive.
+\begin{algorithm}[htbp]
+	\label{alg:hessen_qr_iter}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+	\caption{Hessenberg QR iteration}
+	\SetAlgoLined
+	\Input{$\bA \in \mathbb{C}^{n\times n}$}
+	\textbf{Initilization:} $\bH = \bQ^H \bA \bQ\,,\bA^{(0)} = \bH$.  \textcolor{blue}{\texttt{ \% Hessenberg reduction for $\bA$}}\\
+	\For{$k= 1,\ldots, $}{
+		$\bQ^{(k)}\bR^{(k)} = \bA^{(k-1)}$ \textcolor{blue}{\texttt{ \% Perform QR for $\bA^{(k-1)}$ using Givens QR}}\\
+		$\bA^{(k)} = \bR^{(k)}\bQ^{(k)}$ \textcolor{blue}{\texttt{ \% Matrix computation}}
+	}
+	\Output{$\bA^{(k)}$}
+\end{algorithm}
+One possible solution is: first perform similarity transform $\bA$ to an upper Hessenberg form (Step 1 in Algorithm \ref{alg:hessen_qr_iter}), then perform QR iteration (Algorithm \ref{alg:qr_iter}) over new $\bA^{(0)} = \bH$.
+By using Givens rotations, the QR step only takes $\bigO(n^2)$ flops. 
+
+\clearpage
+\textbf{Problem 6.}
+\textcolor{blue}{(15 points +10 points)}
+
+\noindent
+\begin{enumerate}
+    \item Complete the Algorithm \ref{alg:hessen_qr_step} (corresponding to the step 3-4 of Algrorithm \ref{alg:hessen_qr_iter} ) first \textcolor{blue}{(7 points)}, then
+show \textbf{the detailed derivation} of the computational complexity of in Algorithm \ref{alg:hessen_qr_step} ($\bigO(n^2)$). \textcolor{blue}{(8 points)}
+(Derivation is for the computaional complexity of the algorithm.)
+
+To be more specific, we can present the process of performing QR for $\bA^{(k)}$ using Givens rotations as:
+\begin{enumerate}
+\item[(a)] First, overwrite $\bA^{(k)}$ with upper-triangular $\bR^{(k)}$
+\[
+\bA^{(k)} = (\bG_{m}^H \bG_{m-1}^H \cdots \bG_{1}^H) \bA^{(k)} = \bR^{(k)}\,,
+\]
+where $\bG_{1},\ldots,\bG_{m}$ is a sequence of Givens rotations for some $m$ (In your algorithm, you need to clearly specify what $\bG_i$ is), and $\bR^{(k)}=\bG_1 \cdots \bG_{m}$.
+\item[(b)] Perform matrix multiplication such that $\bA^{(k)}$ is of Hessenberg form,
+\[
+\bA^{(k)} = \bR^{(k)}\bQ^{(k)} = \bA^{(k)}\bG_1 \cdots \bG_{m}\,.
+\]
+\end{enumerate}
+\item 
+\textcolor{blue}{\textbf{(Bouns Problem})}
+\textbf{Implicit QR iteration}
+
+Another way to implement step 3-4 in Algorithm \ref{alg:hessen_qr_iter} is through \textit{implicit QR iteration}.
+The idea is as follows, for $\bA^{(0)}\in \mathbb{R}^{n\times n}$ which is of Hessenberg form,
+\begin{enumerate}
+    \item[(a)] First, compute a Givens rotation $\bG_1$ such that $(\bG_1^{H}\bA^{(0)})_{2,1} =0$ and update $\bA^{(1)}  = \bG_1^{H} \bA^{(0)} \bG_1$. However, the entry $\bA^{(1)}_{3,1}$ may be nonzero (known as "bulge").
+    \item[(b)] Compute another Givens rotation $\bG_2$ such that $(\bG_2\bA^{(1)})_{3,1} =0 $ (i.e., nulling out the "bulge") and update $\bA^{(2)}  = \bG_2^{H} \bA^{(1)} \bG_2$ which is analogous with step (a). Note that the entry $\bA^{(2)}_{4,2}$ will now be nonzero.
+    \item[(c)] Then, we try to find $\bG_3$ such that $(\bG_3\bA^{(2)})_{4,2}=0$.
+    The procedure of iterating nulling out the "bulges" to reset in a upper Hessenberg form is known as "bulge chasing".
+\end{enumerate}
+This algorithm \textit{implicitly} computed QR factorization at the cost of $\bigO(n^2)$, and this is why the algorithm is called the \textit{Implicit QR iteration}.
+Consider a $4\times 4$ Hessenberg matrix
+\[
+\bA^{(0)} = \begin{bmatrix}
+       1 & 2 & 3 & 4\\
+       2 & 3 & 1 & 2\\
+       0 & 1 & 3 & 2 \\
+       0 & 0 & 2& 1
+\end{bmatrix}\,.
+\]
+Carry out the implicit QR iteration (show the detailed derivation) (To simplify the computation, you can use \codeword{Matlab} to do the matrix multiplications. Specifically, explicitly show $\bG_i$, $\bG_i^H\bA^{(i-1)}$ and $\bA^{(i)}$ for each step but when computing the matrix multiplication such as $\bG_i^H\bA^{(i-1)}$, $\bG_i^H\bA^{(i-1)}\bG_i$, you are free to use \codeword{Matlab}. But be careful with the precision issue during the process of computing.), and observe where does the so-called "bulge" appears. \textcolor{blue}{(5 points: including the detailed derivation of the implicit QR iteration and pointing out the "bulge")}
+Based on your observations, explain why the implicit QR iteration is indeed equivalent to the Algorithm \ref{alg:hessen_qr_step}. \textcolor{blue}{(5 points)}
+\end{enumerate}
+
+
+
+
+\begin{algorithm}[htbp]
+	\label{alg:hessen_qr_step}
+	\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+	\caption{Step 3-4 in Hessenberg QR iteration}
+	\SetAlgoLined
+	\Input{$\bA^{(k-1)} \in \mathbb{C}^{n\times n}$ which is of upper Hessenberg form \textcolor{blue}{\texttt{ \% corresponding to $\bA^{(k-1)}$ in step 3 of Algorithm \ref{alg:hessen_qr_iter}}}} 
+	\textcolor{blue}{\texttt{ \% Perform QR for $\bA^{(k)}$ using Givens roations}}\\
+	\textbf{Initilization:} $\bR^{(0)}=\bA, \ \bA^{(0)}=\bA, \ \bQ^{(0)}=\bI.$\\	
+	\For{$i= 1,\ldots,n-1 $}{
+		$\bold G_{0}=\bI$\\
+		\For{$j= n,n-1,\ldots,i+1 $}{
+			$\bold J=\bI $\\
+			$ c = \frac{\bA(i,i)}{\bA(i,i)^2+\bA(j,i)^2}\ , s = \frac{\bA(j,i)}{\bA(i,i)^2+\bA(j,i)^2}$\\
+			$\bold J(i,i)=c;\ \bold J(i,j)=s;\ \bold J(j,i)=-s;\ \bold J(j,j)=c;$\\
+			$\bA^{(i-1)}=\bold J*\bA^{(i-1)}$\\
+			$\bG_i=\bold J*\bG_{i-1}$\\					
+		}
+	    $\bold Q^{(i)}=\bold Q^{(i-1)}\bG_i^{H}$\\
+	    $\bold R^{(i)}=\bG_{i}* \bold R^{(i-1)}$\\
+	    $\bA^{(i)} = \bR^{(i)}\bQ^{(i)}$\\ 
+	}
+	\textcolor{blue}{\texttt{ \% Matrix computation}}\\
+	\Output{$\bA^{(k)}$ \textcolor{blue}{\texttt{ \% corresponding to $\bA^{(k)}$ in step 4 of Algorithm \ref{alg:hessen_qr_iter}}}}
+\end{algorithm}
+
+
+\noindent
+\textbf{Solution}
+\begin{enumerate}
+    \item
+    In step $7-8$, it has $8$ flops.\\
+    In step $9-10$, becanse J is Givens rotation matrix, so it has $2^{3}=8$ flops in every Matrix
+    multiplication. so $2 \times 8=16$ flops in step $9-10$.\\
+    In step $12$, it has $8 \times[n-(i+1)+1]=8(n-i)$ flops.\\
+    In step 13 , it also has $8 \times[n-(i+1)+1]=8(n-i)$ flops.\\
+    so , it to tally has
+    $$
+    \sum_{i=1}^{n-1}[(8+16)(n-i)+2\times 8(n-i)]=20\left(n^{2}-n\right)=\mathcal O\left(n^{2}\right)
+    $$
+    \item
+    $G_1=$
+    $\left|\begin{array}{rrrr}0.4472 & 0.8944 & 0 & 0 \\ -0.8944 & 0.4472 & 0 & 0 \\ 0 & 0 & 1.0000 & 0 \\ 0 & 0 & 0 & 1.0000\end{array}\right|$,
+    $G_2=$
+    $\left|\begin{array}{rrrr}1.0000 & 0 & 0 & 0 \\ 0 & -0.4082 & 0.9129 & 0 \\ 0 & 0.9129 & 0.4082 & 0 \\ 0 & 0 & 0 & -1.0000\end{array}\right|$\\\\\\
+    $G_3=$
+    $\left|\begin{array}{rrrr}1.0000 & 0 & 0 & 0 \\ 0 & 1.0000 & 0 & 0 \\ 0 & 0 & -0.3780 & -0.9258 \\ 0 & 0 & 0.9258 & -0.3780\end{array}\right|$,    
+    $A_1=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & -0.4472 & -2.2361 & -2.6833 \\ 0 & 1.0000 & 3.0000 & 2.0000 \\ 0 & 0 & 2.0000 & 1.0000\end{array}\right|$\\\\\\
+    
+    $A_2=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & 1.0954 & 3.6515 & 2.9212 \\ 0 & 0 & -0.8165 & -1.6330 \\ 0 & 0 & -2.0000 & -1.0000\end{array}\right|$,    
+    $A_3=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & 1.0954 & 3.6515 & 2.9212 \\ 0 & 0 & 2.1602 & 1.5430 \\ 0 & 0 & 0 & -1.1339\end{array}\right|$\\\\\\
+    
+    \item[(a)] First, compute a Givens rotation $\bG_1$ such that $(\bG_1^{H}\bA^{(0)})_{2,1} =0$ and update $\bA^{(1)}  = \bG_1^{H} \bA^{(0)} \bG_1$. However, the entry $\bA^{(1)}_{3,1}$ may be nonzero (known as "bulge").\\
+    Answer is on the below:\\
+    $\bG_1^{H}\bA^{(0)}=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & -0.4472 & -2.2361 & -2.6833 \\ 0 & 1.0000 & 3.0000 & 2.0000 \\ 0 & 0 & 2.0000 & 1.0000\end{array}\right|$\\\\\\
+    
+    $\bA^{(1)}  = \bG_1^{H} \bA^{(0)} \bG_1=$
+    $\left|\begin{array}{rrrr}1.0000 & -2.0000 & 0.4472 & 0\\ -2.0000 & 3.0000 & 3.1305 & 4.4721 \\ -0.8944 & 0.4472 & 3.0000 & 2.0000 \\ 0 & 0 & 2.0000 & 1.0000\end{array}\right|$\\\\\\
+    
+    
+    
+    \item[(b)] Compute another Givens rotation $\bG_2$ such that $(\bG_2\bA^{(1)})_{3,1} =0 $ (i.e., nulling out the "bulge") and update $\bA^{(2)}  = \bG_2^{H} \bA^{(1)} \bG_2$ which is analogous with step (a). Note that the entry $\bA^{(2)}_{4,2}$ will now be nonzero.\\
+    Answer is on the below:\\
+    
+    $\bG_2^{H}\bA^{(1)}=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & 1.0954 & 3.6515 & 2.9212 \\ 0 & 0 & -0.8165 & -1.6330 \\ 0 & 0 & -2.0000 & -1.0000\end{array}\right|$\\\\\\
+    
+    $\bA^{(2)}  = \bG_2^{H} \bA^{(1)} \bG_2=$
+    $\left|\begin{array}{rrrr}2.2361 & 0.5806 & 4.1789 & -3.5777 \\ 0 & 2.8861 & 2.4907 & -2.9212 \\ 0 & -0.7454 & -0.3333 & 1.6330 \\ 0 & -1.8257 & -0.8165 & 1.0000\end{array}\right|$\\\\\\
+    
+    
+    
+    
+    
+    
+    \item[(c)] Then, we try to find $\bG_3$ such that $(\bG_3\bA^{(2)})_{4,2}=0$.
+    The procedure of iterating nulling out the "bulges" to reset in a upper Hessenberg form is known as "bulge chasing".\\
+    Answer is on the below:\\\\
+    $\bG_3^{H}\bA^{(2)}=$
+    $\left|\begin{array}{rrrr}2.2361 & 3.5777 & 2.2361 & 3.5777 \\ 0 & 1.0954 & 3.6515 & 2.9212 \\ 0 & 0 & 2.1602 & 1.5430 \\ 0 & 0 & 0 & -1.1339\end{array}\right|$\\\\\\    
+    
+    
+    
+\end{enumerate}
+
+\end{document}
