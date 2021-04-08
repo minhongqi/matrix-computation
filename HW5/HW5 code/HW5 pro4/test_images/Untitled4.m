@@ -1,0 +1,23 @@
+clc;
+clear all;
+
+X1 = imread('yaleB24_1.pgm ');
+figure(1);imshow(X1);
+X2 = imread('yaleB24_2.pgm ');
+figure(2);imshow(X2);
+X3 = imread('yaleB24_3.pgm ');
+figure(3);imshow(X3);
+X4 = imread('yaleB24_4.pgm ');
+figure(4);imshow(X4);
+X5 = imread('yaleB24_5.pgm ');
+figure(5);imshow(X5);
+X6 = imread('yaleB24_6.pgm ');
+figure(6);imshow(X6);
+X7 = imread('yaleB24_7.pgm ');
+figure(7);imshow(X7);
+X8 = imread('yaleB24_8.pgm ');
+figure(8);imshow(X8);
+X20 = imread('yaleB24_20.pgm ');
+figure(20);imshow(X20);
+X21 = imread('yaleB24_21.pgm ');
+figure(21);imshow(X21);

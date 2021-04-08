@@ -1,0 +1,928 @@
+\documentclass[english,onecolumn]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{luainputenc}
+\usepackage[letterpaper]{geometry}
+\geometry{verbose}
+\usepackage{amsfonts}
+\usepackage{babel}
+
+\usepackage{extarrows}
+\usepackage[colorlinks]{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[ruled,linesnumbered]{algorithm2e}
+
+\usepackage{amsmath,graphicx}
+\usepackage{subfigure} 
+\usepackage{cite}
+\usepackage{amsthm,amssymb,amsfonts}
+\usepackage{textcomp}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\usepackage{listings}
+\lstset{language=Matlab}
+\usepackage{graphicx} 
+
+
+
+
+
+
+
+\lstdefinestyle{mystyle}{
+    numberstyle=\color{green},
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
+\topmargin            -18.0mm
+\textheight           226.0mm
+\oddsidemargin      -4.0mm
+\textwidth            166.0mm
+\def\baselinestretch{1.5}
+
+\begin{document}
+
+\begin{center}
+	\textbf{{\Large SI231 - Matrix Computations, Fall 2020-21}}\\
+	Homework Set \#2\\
+   \texttt{Prof. Yue Qiu and Prof. Ziping Zhao} \\
+	\texttt{\textbf{Name:}}   	\texttt{ Min Hongqi }  		\hspace{1bp}
+	\texttt{\textbf{Major:}}  	\texttt{ Electronic Information } 	\\
+	\texttt{\textbf{Student No.:}} 	\texttt{ 2020E8018482005 }     \hspace{1bp}
+	\texttt{\textbf{E-mail:}} 	\texttt{ minhq@sari.ac.cn}
+\par\end{center}
+
+
+\noindent
+\rule{\linewidth}{0.4pt}
+{\bf {\large Acknowledgements:}}
+\begin{enumerate}
+    \item Deadline: \textbf{2020-10-11 23:59:00}
+    \item Submit your homework at \textbf{Gradescope}. Entry Code: \textbf{MY3XBJ}. Also, make sure that your gradescope account is your \textbf{school e-mail}.
+    Homework \#2 contains two parts, the theoretical part the and the programming part.
+    \item About the the theoretical part:
+    \begin{enumerate}
+            \item[(a)] Submit your homework in \textbf{Homework 2} in gradescope. Make sure that you have assigned the correct pages for the problems in the outline.
+            \item[(b)] Your homework should be uploaded in the \textbf{PDF} format, and the naming format of the file is not specified.
+            \item[(c)] No handwritten homework is accepted. You need to use \LaTeX. (If you have difficulty in using \LaTeX, you are allowed to use \textbf{Word} for the first and the second homework to accommodate yourself.)
+            \item[(d)] Use the given template and give your solution in English. Solution in Chinese is not allowed. 
+        \end{enumerate}
+  \item About the programming part:
+  \begin{enumerate}
+      \item[(a)] Submit your codes in \textbf{Homework 2 Programming part} in gradescope.
+      \item[(b)] Details of requirements in programming are listed in remarks of Problem 6, please read it carefully before you start to program.
+  \end{enumerate}
+  \item \textbf{No late submission is allowed.}```
+\end{enumerate}
+\rule{\linewidth}{0.4pt}
+\newpage 
+\section{General Linear System}
+\noindent\textbf{Problem 1}   \textcolor{blue}{(6 points + 9 points)}
+\vspace*{3mm}
+
+\noindent Let $\mathbf{A} = \begin{bmatrix}
+	1 & 0 & 1 & 2\\
+	-2 & 4 & -6 & 0\\
+	3 & 1 & 14 & -1\\
+	-1 & 7 & -5 & 3
+	\end{bmatrix} \in\mathbb{R}^{4\times 4}\;$ and
+	$\mathbf{B} = \begin{bmatrix}
+	1 & 2 & 3 & -1\\
+	2 & 3 & 1 & 1\\
+	2 & 2 & 2 & -1\\
+	5 & 5 & 2 & 3
+	\end{bmatrix} \in\mathbb{R}^{4\times 4}\;.$
+\begin{enumerate}
+	\item 
+	For {\bf A} and ${\bf b} = (-1,2,5,3)^T\in \mathbb{R}^4$, 
+	find $\mathcal{N}({\bf A}),\, \mathcal{R}({\bf A})$, then solve ${\bf Ax} = {\bf b}$.
+	\item 
+	For {\bf B} and 
+	${\bf b} = (1,1,1,2)^T \in \mathbb{R}^4$, solve the linear equation system ${\bf Bx} = {\bf b}$ 
+	with Gauss Elimination, LU decomposition, and LU decomposition with partial pivoting, respectively. (Although not required, you are highly encouraged to write down your solution procedures in detail.)
+\end{enumerate}
+
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item To find $\mathcal{N}(A), i s$ equal to solve $: A x=\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ -2 & 4 & -6 & 0 \\ 3 & 1 & 14 & -1 \\ -1 & 7 & -5 & 3\end{array}\right]\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]=0$
+\\ then $\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ -2 & 4 & -6 & 0 \\ 3 & 1 & 14 & -1 \\ 1 & 7 & -5 & 3\end{array}\right] \rightarrow\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ 0 & 4 & -4 & 4 \\ 0 & 1 & 11 & -7 \\ 0 & 7 & -4 & 5\end{array}\right] \rightarrow\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ 0 & 1 & -1 & 1 \\ 0 & 0 & 12 & -8 \\ 0 & 0 & 3 & -2\end{array}\right] \rightarrow\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ 0 & 1 & 1 & 1 \\ 0 & 0 & 3 & -2 \\ 0 & 0 & 0 & 0\end{array}\right]$
+\\ $W e\ g e t\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]=\left[\begin{array}{c}-8 \\ -1 \\ 2 \\ 3\end{array}\right] k, \quad k \in R.$
+ $so \  \mathcal{N}(A)=span\left( \left[ \begin{array}{c}-8 \\ -1 \\ 2 \\ 3 \end{array}\right] \right)$
+
+To find $R(A)$ ,is equal to solve $: A x=\left[\begin{array}{cccc}1 & 0 & 1 & 2 \\ -2 & 4 & -6 & 0 \\ 3 & 1 & 14 & -1 \\ -1 & 7 & -5 & 3\end{array}\right]\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]=\left[\begin{array}{c}-1 \\ 2 \\ 5 \\ 3\end{array}\right]$
+\\$\operatorname{then}\left[\begin{array}{cccc|c}1 & 0 & 1 & 2 & 1 \\ -2 & 4 & -6 & 0 \\ 3 & 1 & 14 & -1 & 5 \\ 1 & 7 & -5 & 3 & 3\end{array}\right] \rightarrow\left[\begin{array}{cccc|c}1 & 0 & 1 & 2 & -1 \\ 0 & 4 & -4 & 4 & 0 \\ 0 & 1 & 11 & -7 & 8 \\ 0 & 7 & -4 & 5 & 2\end{array}\right] \rightarrow\left[\begin{array}{cccc|c}1 & 0 & 1 & 2 & -1 \\ 0 & 1 & 1 & 1 & 0 \\ 0 & 0 & 12 & -8 & 8 \\ 0 & 0 & 3 & -2 & 2\end{array}\right] \rightarrow\left[\begin{array}{cccc|c}1 & 0 & 1 & 2 & -1 \\ 0 & 1 & -1 & 1 & 0 \\ 0 & 0 & 3 & -2 & 2 \\ 0 & 0 & 0 & 0 & 0\end{array}\right] $
+\\$so\  \mathcal R(A)=span\left(\left[\begin{array}{c}1 \\ -2 \\ 3 \\ -1\end{array}\right]\left[\begin{array}{c}0 \\ 4 \\ 1 \\ 7\end{array}\right]\left[\begin{array}{c}1 \\ -6 \\ 14 \\ 5\end{array}\right]\right)$
+
+
+
+
+
+    \item 
+$\bold{  Gauss \  Elimination:}$ Gauss Elimination:$\left[\begin{array}{cc}B & b\end{array}\right]=\left[\begin{array}{cccc|c}1 & 2 & 3 & -1 & 1 \\ 2 & 3 & 1 & 1 & 1 \\ 2 & 2 & 2 & 1 & 1 \\ 5 & 5 & 2 & 3 & 2\end{array}\right] \rightarrow\left[\begin{array}{cccc|c}1 & 2 & 3 & -1 & 1 \\ 0 & -1 & -5 & 3 & -1 \\ 0 & -2 & -4 & 1 & -1 \\ 0 & -5 & -13 & 8 & -3\end{array}\right] \rightarrow\left[\begin{array}{cccc|c}1 & 2 & 3 & -1 & 1 \\ 0 & 1 & 5 & -3 & 1 \\ 0 & 0 & 6 & -5 & 1 \\ 0 & 0 & 12 & -7 & 2\end{array}\right] 
+\rightarrow\left[\begin{array}{cccc|c}1 & 2 & 3 & -1 & 1 \\ 0 & 1 & 5 & -3 & 1 \\ 0 & 0 & 6 & -5 & 1 \\ 0 & 0 & 0 & 3 & 0\end{array}\right]  $
+\\ so  we get $\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]=\left[\begin{array}{c}\frac{1}{6} \\ \frac{1}{6}  \\ \frac{1}{6}  \\ 0\end{array}\right]$
+\\ $\bold{LU\  decomposition:}$ solve $B=LU$ Use the previous derivation,we know that $U=\left[\begin{array}{rrrr}1 & 2 & 3 & -1 \\ 0 & -1 & -5 & 3 \\ 0 & 0 & 6 & -5 \\ 0 & 0 & 0 & 3\end{array}\right]$
+\\$M_{1}=\left[\begin{array}{cccc}1 & & &\\ -2 & 1 && \\ -2 & & 1 & \\ -5 & & & 1\end{array}\right] \quad, \quad M_{2}=\left[\begin{array}{cccc}1 &&&\\ & 1&& \\ &-2 & 1& \\& -5 && 1\end{array}\right]$
+$M_{3}=\left[\begin{array}{llll}1 & & &\\ & 1 & & \\ & & 1 & \\& & -2 & 1\end{array}\right]$
+\\then $L=M_{1}^{-1} M_{2}^{-1} M_{3}^{-1}=\left[\begin{array}{llll}1 & & & \\ 2 & 1 & \\ 2 & 2 & 1 \\ 5 & 5 & 2 & 1\end{array}\right]$
+\\so solve $B x=b \Leftrightarrow L U x=b$
+$\Leftrightarrow L z=b, \quad U x=z$
+\\firstly, solve $L z=b$ ,then because $[L\  b]=\left[\begin{array}{llll|l}1 & & & & 1 \\ 2 & 1 & & & 1 \\ 2 & 2 & 1 & & 1 \\ 5 & 5 & 2 & 1 & 2\end{array}\right]$
+$\Rightarrow \quad z=\left[\begin{array}{l}z_{1} \\ z_{2} \\ z_{3} \\ z_{4}\end{array}\right]=\left[\begin{array}{l}1 \\ -1 \\ 1 \\ 0\end{array}\right]$
+\\Secondly, solve $U x=z$ ,then because $\left[U\  z\right]=\left[\begin{array}{rrrr|r}1 & 2 & 3 & -1 & 1 \\ 0 & -1 & -5 & 3 & -1 \\ 0 & 0 & 6 & -5 & 1 \\ 0 & 0 & 0 & 3 & 0\end{array}\right] \Rightarrow x=\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]= \left[ \begin{array}{l} \frac{1}{6} \\ \frac{1}{6} \\ \frac{1}{6} \\ 0\end{array}\right]$
+\\$\bold{ LU\  decomposition\  with\  partial\  pivoting:}$ 
+\\$B=\left[\begin{array}{llll}1 & 2 & 3 & 1 \\ 2 & 3 & 1 & 1 \\ 2 & 2 & 2 & 1 \\ 5 & 5 & 2 & 3\end{array}\right] \rightarrow\left[\begin{array}{llll}5 & 5 & 2 & 3 \\ 2 & 3 & 1 & 1 \\ 2 & 2 & 2 & 1 \\ 1 & 2 & 3 & -1\end{array}\right] \rightarrow\left[\begin{array}{llll}5 & 5 & 2 & 3 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{6}{5} & -\frac{1}{5} \\ 0 & 1 & \frac{13}{5} & -\frac{8}{5}\end{array}\right]$$\rightarrow\left[\begin{array}{cccc}5 & 5 & 2 & 3 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{6}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{12}{5} & -\frac{7}{5}\end{array}\right] \rightarrow\left[\begin{array}{cccc}5 & 5 & 2 & 3 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{12}{5} & -\frac{7}{5} \\ 0 & 0 & \frac{6}{5} & -\frac{1}{5}\end{array}\right] \rightarrow\left[\begin{array}{cccc}5 & 5 & 2 & 3 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{12}{5} & -\frac{7}{5} \\ 0 & 0 & 0 & \frac{1}{2}\end{array}\right]$
+\\$\therefore \Pi_{1}=\left[\begin{array}{llll}0 & 0 & 0 & 1 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 1 & 0 & 0 & 0\end{array}\right], M_{1}=\left[\begin{array}{cccc}1 & 0 & 0 & 0 \\ -\frac{2}{5} & 1 & 0 & 0 \\ -\frac{2}{5} & 0 & 1 & 0 \\ -\frac{1}{5} & 0 & 0 & 1\end{array}\right]$
+\\$\pi_{2}=\left[\begin{array}{llll}1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1\end{array}\right] , M_{2}=\left[\begin{array}{llll}1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & -1 & 0 & 1\end{array}\right] \\ \pi_{3}=\left[\begin{array}{llll}1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0\end{array}\right] , M_{3}=\left[\begin{array}{llll}1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & -\frac{1}{2} & 1\end{array}\right]$
+\\$\widetilde{M}_{1}=\Pi_{3} \Pi_{2} M_{1} \Pi_{2} \Pi_{3}=\left[\begin{array}{cccc}1 & 0 & 0 & 0 \\ -\frac{2}{5} & 1 & 0 & 0 \\ -\frac{1}{5} & 0 & 1 & 0 \\ -\frac{2}{5} & 0 & 0 & 1\end{array}\right] ,\ \widetilde{M}_{2}=\Pi_{3} M_{2} \Pi_{3}=\left[\begin{array}{llll}1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 0 & 0 & 1\end{array}\right] ,\  \widetilde{M}_{3}=  M_{3}$
+\\$P=\Pi_{3} \Pi_{2} \Pi_{1}=\left[\begin{array}{llll}0 & 0 & 0 & 1 \\ 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0\end{array}\right],$$L=\widetilde{M}_{1}^{-1} \widetilde{M}_{2}^{-1} \widetilde{M}_{3}^{-1}=\left[\begin{array}{cccc}1 & 0 & 0 & 0 \\ \frac{2}{5} & 1 & 0 & 0 \\ \frac{1}{5} & 0 & 1 & 0 \\ \frac{2}{5} & 1 & \frac{1}{2} & 1\end{array}\right], U=\left[\begin{array}{cccc}5 & 5 & 2 & 3 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} \\ 0 & 0 & \frac{12}{5} & -\frac{7}{5} \\ 0 & 0 & 0 & \frac{1}{2}\end{array}\right]$
+$B x=b \Leftrightarrow P B x=P b \Leftrightarrow L U x=P b$
+and we can know $P b=\left[\begin{array}{cccc}0 & 0 & 0 & 1 \\ 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0\end{array}\right]\left[\begin{array}{c}1 \\ 1 \\ 1 \\ 2\end{array}\right]=\left[\begin{array}{l}2 \\ 1 \\ 1 \\ 1\end{array}\right]$
+\\solve $Lz=Pb$ ,we get $[L, P b]=\left[\begin{array}{cccc|c}1 & 0 & 0 & 0 & 2 \\ \frac{2}{5} & 1 & 0 & 0 & 1 \\ \frac{1}{5} & 1 & 1 & 0 & 1 \\ \frac{2}{5} & 0 & \frac{1}{2} & 1 & 1\end{array}\right] \Rightarrow z=\left[\begin{array}{c}z_{1} \\ z_{2} \\ z_{3} \\ z_{4}\end{array}\right]=\left[\begin{array}{c}2 \\ \frac{1}{5} \\ z \\ \xi \\ 0\end{array}\right]$
+\\solve $ Ux=z $ ,we get $ \left[U \ z\right]=\left[\begin{array}{cccc|c}5 & 5 & 2 & 3 & 2 \\ 0 & 1 & \frac{1}{5} & -\frac{1}{5} & \frac{1}{5} \\ 0 & 0 & \frac{12}{5} & -\frac{7}{5} & \frac{2}{5} \\ 0 & 0 & 0 & \frac{1}{2} & 0\end{array}\right] \Rightarrow x=\left[\begin{array}{l}x_{1} \\ x_{2} \\ x_{3} \\ x_{4}\end{array}\right]=\left[\begin{array}{c}\frac{1}{6} \\ \frac{1}{6} \\ \frac{1}{6} \\ 0\end{array}\right]$
+\end{enumerate}
+
+\newpage
+\section{Understanding Various Matrix Decompositions}
+\noindent\textbf{Problem 2} \textcolor{blue}{(10 points)}
+
+\noindent Consider the following symmetric matrix ${\bf A}\in \mathbb{R}^{4\times 4}$,
+	\begin{align*}
+		\mathbf{A}=
+		\begin{bmatrix}
+			a&a&a&a\\
+			a&b&b&b\\
+			a&b&c&c\\
+			a&b&c&d
+		\end{bmatrix}\,.
+	\end{align*}
+Give the LU decomposition of $\mathbf{A}$.
+Then describe under which conditions $\bf{A}$ is nonsingular, according to the results of LU decomposition.
+
+\noindent \textbf{Solution.}
+Please insert your solution here ...
+\\$A=\left[\begin{array}{llll}
+a & a & a & a \\
+a & b & b & b \\
+a & b & c & c \\
+a & b & c & d
+\end{array}\right] \rightarrow\left[\begin{array}{llll}
+a & a & a & a \\
+0 & b-a & b-a & b-a \\
+0 & b-a & c-a & c-a \\
+0 & b-a & c-a & d-a
+\end{array}\right] 
+\rightarrow  {\left[\begin{array}{llll}
+a & a & a & a \\
+0 & b-a & b-a & b-a \\
+0 & 0 & c-b & c-b \\
+0 & 0 & c-b & d-b
+\end{array}\right]}  \Rightarrow\left[\begin{array}{cccc}
+a & a & a & a \\
+0 & b-a & b-a & b-a \\
+0 & 0 & c-b & c-b \\
+0 & 0 & 0 & d-c
+\end{array}\right]$
+\\$M_{1}=\left[\begin{array}{rrrr}
+1 & 0 & 0 & 0 \\
+-1 & 1 & 0 & 0 \\
+-1 & 0 & 1 & 0 \\
+-1 & 0 & 0 & 1
+\end{array}\right] \quad M_{2}=\left[\begin{array}{rrrr}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & -1 & 1 & 0 \\
+0 & -1 & 0 & 1
+\end{array}\right] \quad
+M_{3}=\left[\begin{array}{llll}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & -1 & 1
+\end{array}\right]$
+\\so $L=M_{1}^{-1}M_{2}^{-1}M_{3}^{-1}=\left[\begin{array}{llll}
+1 & 0 & 0 & 0 \\
+1 & 1 & 0 & 0 \\
+1 & 1 & 1 & 0 \\
+1 & 1 & 1 & 1
+\end{array}\right] \quad U=\left[\begin{array}{cccc}
+a & a & a & a \\
+0 & b-a & b-a & b-a \\
+0 & 0 & c-b & c-b \\
+0 & 0 & 0 & d-c
+\end{array}\right]$
+\\if $A$ is nonsingular,we need 
+$r(A)=4 \Leftrightarrow r(L U)=4 \Leftrightarrow r(L)=r(u)=4$\\
+It's easy to know $r(L)=4$, so we need $r(U)=4
+\therefore d e t(U) \neq 0 \Leftrightarrow a(b-a)(c-b)(d-c) \neq 0\\
+\Leftrightarrow a \neq 0 \text { and } b \neq a \text { and } c \neq b \text { and } d \neq c$
+
+
+
+
+
+\newpage
+\noindent\textbf{Problem 3} \textcolor{blue}{(5 points + 10 points)}
+\begin{enumerate}
+	\item Consider a $3\times 3$ matrix
+	\[
+	\mathbf{A} = \begin{bmatrix}
+		2& 2&4 \\
+		1&5&1\\
+		1&1&8
+	\end{bmatrix}\,,
+	\] find the LDM (also called LDU) decomposition of $\mathbf{A}$, i.e., factor $\mathbf{A}$ as $\mathbf{A}=\mathbf{L}\mathbf{D}\mathbf{M}^T$ (or $\mathbf{A}=\mathbf{L}\mathbf{D}\mathbf{U}$), where $\mathbf{L}\in\mathbb{R}^{3\times 3}$ is lower triangular with unit diagonal entries, $\mathbf{D}\in\mathbb{R}^{3\times 3}$  is  a diagonal matrix, and $\mathbf{M}\in\mathbb{R}^{3\times 3}$ is lower triangular with unit diagonal entries ($\mathbf{U}\in\mathbb{R}^{3\times 3}$ is upper triangular with unit diagonal entries).
+	
+	\item Consider a $3\times 3$ matrix
+	\[
+	\mathbf{B} = \begin{bmatrix}
+		8& 1&1 \\
+		1&5&1\\
+		4&2&2
+	\end{bmatrix}\,,
+	\] find the UL decomposition  of $\mathbf{B}$, 
+	i.e., factor $\mathbf{B}$ as $\mathbf{B} = \mathbf{UL}$,
+	where $\mathbf{U}\in\mathbb{R}^{3\times 3}$ is upper triangular with unit diagonal entries and $\mathbf{L}\in\mathbb{R}^{3\times 3}$ is lower triangular.\\
+	\textbf{Hint:}  $\mathbf{B}=\mathbf{P}\mathbf{A}\mathbf{P}$, where $\mathbf{P}$ is a unit anti-diagonal matrix \footnote{{\textbf{Anti-diagonal matrix:} An anti-diagonal matrix is a square matrix where all the entries are zero except those on the diagonal going from the lower left corner to the upper right corner, known as the anti-diagonal. For example, 
+			\[
+			\text{adiag}(a_1,\ldots,a_n) = \begin{bmatrix}
+				0 & 0 & \cdots & 0 & a_1 \\
+				0 & 0 & \cdots  & a_2 & 0 \\
+				\vdots &  \vdots & \ddots & \vdots &\vdots \\
+				a_n & 0 & \cdots &  \cdots& 0
+			\end{bmatrix}\,,
+			\]
+			and consequently, unit anti-diagonal matrix means $\text{adiag}(1,\ldots,1)$, also known as the \textbf{exchange matrix} or the \textbf{permutation matrix}. 
+	}}.
+\end{enumerate}
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item $
+A=\left[\begin{array}{lll}
+2 & 2 & 4 \\
+1 & 5 & 1 \\
+1 & 1 & 8
+\end{array}\right] \rightarrow\left[\begin{array}{lll}
+2 & 2 & 4 \\
+0 & 4 & -1 \\
+0 & 0 & 6
+\end{array}\right]
+\therefore M_{1}=\left[\begin{array}{rrr}
+1 & 0 & 0 \\
+-\frac{1}{2} & 1 & 0 \\
+-\frac{1}{2} & 0 & 1
+\end{array}\right], \quad L=M_{1}^{-1}=\left[\begin{array}{ccc}
+1 & 0 & 0 \\
+\frac{1}{2} & 1 & 0 \\
+\frac{1}{2} & 0 & 1
+\end{array}\right] \\
+U=\left[\begin{array}{lll}
+2 & 2 & 4 \\
+0 & 4 & -1 \\
+0 & 0 & 6
+\end{array}\right] 
+\therefore A=L U=L D D^{-1} U\\
+including \quad D=\left[\begin{array}{lll}
+2 & 0 & 0 \\
+0 & 4 & 0 \\
+0 & 0 & 6
+\end{array}\right] \quad \text { and } \quad P^{-1}=\left[\begin{array}{ccc}
+\frac{1}{2} & 0 & 0 \\
+0 & \frac{1}{4} & 0 \\
+0 & 0 & \frac{1}{6}
+\end{array}\right]\\
+\therefore M^{T}=D^{-1} u=\left[\begin{array}{ccc}
+\frac{1}{2} & 0 & 0 \\
+0 & \frac{1}{4} & 0 \\
+0 & 0 & \frac{1}{6}
+\end{array}\right]\left[\begin{array}{ccc}
+2 & 2 & 4 \\
+0 & 4 & -1 \\
+0 & 0 & 6
+\end{array}\right]=\left[\begin{array}{ccc}
+1 & 1 & 2 \\
+0 & 1 & -\frac{1}{4} \\
+0 & 0 & 1
+\end{array}\right]
+$
+
+
+
+
+
+    \item $B=UL \quad U^{-1}B=L \\ \\
+B=\left[\begin{array}{ccc}
+8 & 1 & 1 \\
+1 & 5 & 1 \\
+4 & 2 & 2
+\end{array}\right] \rightarrow\left[\begin{array}{ccc}
+6 & 0 & 0 \\
+-1 & 4 & 0 \\
+4 & 2 & 2
+\end{array}\right] \\
+\therefore M_{1}=\left[\begin{array}{rrr}
+1 & 0 & -\frac{1}{2} \\
+0 & 1 & -\frac{1}{2} \\
+0 & 0 & 1
+\end{array}\right], \quad U=M_{1}^{-1}=\left[\begin{array}{lll}
+1 & 0 & \frac{1}{2} \\
+0 & 1 & \frac{1}{2} \\
+0 & 0 & 1
+\end{array}\right], \quad L=\left[\begin{array}{lll}
+6 & 0 & 0 \\
+-1 & 4 & 0 \\
+4 & 2 & 2
+\end{array}\right]
+$ then $B=UL$
+
+\end{enumerate}
+
+\newpage
+\noindent\textbf{Problem 4} \textcolor{blue}{(7 points + 6 points + 7 points + 5 points)}
+
+\noindent Given a matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$, suppose that the LDM (LDU) decomposition of $\mathbf{A}$ exists, prove that
+\begin{enumerate}
+	\item the LDM (LDU) decomposition of $\mathbf{A}$ is \textit{uniquely} determined;
+	\item if $\mathbf{A}$ is a symmetric matrix, then its LDM (LDU) decomposition must be $\mathbf{A}=\mathbf{L}\mathbf{D}\mathbf{L}^T$, which is called LDL (LDL$^T$) decomposition in this case;
+	\item $\mathbf{A}$ is a symmetric and positive definite matrix if and only if its Cholesky decomposition exists (i.e., there exists a matrix $\mathbf{G}\in\mathbb{R}^{n\times n}$ such that $\mathbf{A}=\mathbf{G}\mathbf{G}^T$, where $\mathbf{G}$ is lower triangular with \textit{positive} diagonal entries);
+	\item if $\mathbf{A}$ is a symmetric and positive definite matrix, then its Cholesky decomposition is \textit{uniquely} determined.	
+\end{enumerate}
+
+\textbf{Hints:}  
+\begin{enumerate}
+    \item The existence of the LDM (LDU) decomposition implies the non-singularity of the matrix.
+    \item You can directly utilize the following lemmas,
+\begin{itemize}
+    \item the inverse (if it exists) of a lower (resp. upper) triangular matrix is also lower (resp. upper) triangular;
+    \item the product of two lower (resp. upper) triangular matrices is lower (resp. upper) triangular;
+    \item also, if such two lower (resp. upper) triangular matrices have unit diagonal entries, then their product also has unit diagonal entries.
+\end{itemize}
+\end{enumerate}
+
+  
+
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item 
+To prove the uniqueness, suppose $A=L D M^{T}=L_{1} D_{1} M_{1}^{T}$ are two different LDM $^{T}$
+decompositions. Note that all the matrices here are invertible, because $A$ is non-singular.
+By the uniqueness of the LU decomposition , we have $L=L_{1}$, hence, $D M^{}=D_{1} M_{1}^{T}$ and $D_{1}^{-1} D=M_{1}^{T}\left(M^{T}\right)^{-1} .$ since both $M^{T}$ and $M_{1}^{T}$ are unit upper triangular, so is $M_{1}^{T}\left(M^{T}\right)^{-1}$ . On the other hand, $D_{1}^{-1} D$ is diagonal. The only matrix that is unit lower triangular and diagonal is the identity matrix. Thus $M_{1}^{T}\left(M^{T}\right)^{-1}=I$ and $D_{1}^{-1} D=I,$ which implies $M^{T}=M_{1}^{T}$ and $D=D_{1}$
+
+    \item 
+Suppose that the symmetric matrix A has the unique LDU decomposition $\mathbf{A}=\mathbf{L D U} .$ Then, $\mathbf{A}=\mathbf{A}^{T}=\mathbf{U}^{T} \mathbf{D} \mathbf{L}^{T},$ implying (since $\mathbf{U}^{T}$ is unit lower
+triangular and $\mathbf{L}^{T}$ is unit upper triangular) that $\mathbf{A}=\mathbf{U}^{T} \mathbf{D} \mathbf{L}^{T}$ is an $LDU$ decomposition of $A$ and hence in light of the uniqueness of the LDU decomposition that $\mathbf{L}=\mathbf{U}^{T}$ (or equivalently $\mathbf{U}=\mathbf{L}^{T}$ ). $\quad$
+
+    \item $\bold{Prove\  sufficiency\  first:}$
+According to the eigenvalue decomposition of the symmetric matrix,we get
+$
+A=Q \operatorname{diag}\left(\lambda_{1}, \lambda_{2}, \cdots, \lambda_{n}\right) Q^{T}
+$
+according to the above formula,
+$$
+A=\underbrace{\left[Q \operatorname{diag}\left(\sqrt{\lambda_{1}}, \sqrt{\lambda_{2}}, \cdots, \sqrt{\lambda_{n}}\right)\right.}_{V} \underbrace{\left[\operatorname{Qdiag}\left(\sqrt{\lambda_{1}}, \sqrt{\lambda_{2}}, \cdots, \sqrt{\lambda_{n}}\right)\right]^{T}}_{V}=V V^{T}
+$$
+do the RQ decomposition to $V$, we get  $V=\widetilde{K} Q,$ in which $\widetilde{K}$ is upper triangular matrix and $Q$ is orthogonal matrix,then
+$$
+A=V V^{T}=\widetilde{K} Q Q^{T} \widetilde{K}^{T}=\widetilde{K K}^{T}
+$$
+Command $D=\operatorname{diag}\left(\operatorname{sign} k_{11}, \operatorname{sign} k_{22}, \cdots, \operatorname{sign} k_{m}\right),$ then $K=\tilde{K} D$ is an upper triangular matrix with positive diagonal elements. As a result,
+$$
+A=\widetilde{K} \widetilde{K}^{T}=\left(K D^{-1}\right)\left(K D^{-1}\right)^{T}=K K^{T}
+$$
+$\bold{Prove\  necessity:}$$G$ is a lower triangular with positive diagonal entries, then $A^{T}=G G^{T}=A .$ So $A=G G^{T}$ is a symmetic
+matrix obviously. And for $\forall x \neq 0, x^{T} A x=x^{T} G G^{T} x=\left(G^{T} x\right)^{T} G^{T} x=\left\|G^{T} x\right\|_{2}^{2}>0 .$ So $A$ is a positive
+definite matrix.
+
+
+ 
+    \item let's prove uniqueness:  if exist $K_{1}, K_{2}$ can make $K_{1} K_{1}^{T}=A=K_{2} K_{2}^{T}$ ,there must be $$
+K_{2}^{-1} K_{1}=K_{2}^{T} K_{1}^{-T}=\left(K_{2}^{-1} K_{1}\right)^{-T}
+$$
+Since both sides of the above equation are lower triangular and upper triangular matrices respectively, they are the same diagonal matrix, then
+$$
+K_{2}^{-1} K_{1}=\left(K_{2}^{-1} K_{1}\right)^{-T}=\left(K_{2}^{-1} K_{1}\right)^{-1}
+$$
+so there must be  $K_{2}^{-1} K_{1}=I, \quad$ so $K_{1}=K_{2}$ 
+\end{enumerate}
+
+\newpage
+\noindent\textbf{Problem 5}
+\textcolor{blue}{(10 points + 5 points)}
+
+\noindent Consider matrix ${\bf A} \in \mathbb{R}^{n\times n}$ in the following form,
+\[
+\mathbf{A} = 
+\begin{bmatrix}
+	b_1 & c_1 &  0  &  0 & 0  & 0 \\
+	a_2 & b_2 & c_2 &  0 & 0  & 0 \\
+	0   & a_3 & b_3 & c_3 & 0 & 0 \\
+	0   & 0 & \ddots & \ddots& \ddots&0\\
+	\vdots & \vdots & \ddots& a_{n-1}& b_{n-1}& c_{n-1}\\
+	0 & 0 & \cdots & 0 & a_{n} & b_n 
+\end{bmatrix}\,,
+\]
+where $a_j$, $b_j$, and $c_j$ are non-zero entries.
+The matrix in such form is known as a \textbf{Tridiagonal Matrix} in the sense that it contains three diagonals.
+\begin{enumerate}
+	\item LU decomposition is particularly efficient in the case of tridiagonal matrices. Find the LU decomposition of $\mathbf{A}$ (derivation is expected) and try to complete the Algorithm \ref{alg: lu_tri}.
+\begin{algorithm}[htbp]
+\SetKwInOut{Input}{Input}\SetKwInOut{Output}{Output}
+\label{alg: lu_tri}
+\caption{LU decomposition for tridiagonal matrices}
+\SetAlgoLined
+\Input{Tridiagonal matrix $\mathbf{A}\in \mathbb{R}^{n\times n}$.}
+\Output{LU decomposition of $\mathbf{A}$.}
+\textit{Complete the algorithm here...}
+
+\begin{lstlisting}
+N=length(A);
+z = zeros(N,1);
+L=eye(N);%Let the L matrix be an identity matrix at first
+for i=1:N-1
+    for j=i+1:N            
+            L(j,i)=A(j,i)/A(i,i);
+            A(j,:)=A(j,:)-(A(j,i)/A(i,i))*A(i,:);
+    end
+end
+L
+U=A
+\end{lstlisting}
+
+
+
+\end{algorithm}
+\item
+Consider symmetric tridiagonal matrices
+\[
+\mathbf{A} = \begin{bmatrix}
+    1 & 1 & 0\\
+    1 & 2 & 1 \\
+    0 & 1 & 2 
+\end{bmatrix}
+\quad \text{and  }
+\mathbf{B}= \begin{bmatrix}
+    a & a & 0 \\
+    a & a+b & b \\
+    0 & b & b+c
+\end{bmatrix}\,,
+\]
+and give the LU decompositions and the LDL$^T$ (also known as the LDL) decompositions of $\mathbf{A}$ and $\mathbf{B}$ respectively.
+\end{enumerate}
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item 
+$$A=\left[\begin{array}{cccccc}
+b_{1} & c_{1} & 0 & 0 & 0 & 0 \\
+a_{2} & b_{2} & c_{2} & 0 & 0 & 0 \\
+0 & a_{3} & b_{3} & c_{3} & 0 & 0 \\
+0 & 0 & \ddots & \ddots & \ddots & 0 \\
+\vdots & \vdots & \ddots & a_{n-1} & b_{n-1} & c_{n-1} \\
+0 & 0 & \cdots & 0 & a_{n} & b_{n}
+\end{array}\right]=\left[\begin{array}{ccccc}
+1 & 0 & 0 & \ldots & 0 \\
+v_{2} & 1 & 0 & \cdots & 0 \\
+0 & v_{3} & 1 & \ddots & \vdots \\
+\vdots & \ddots & \ddots & 1 & 0 \\
+0 & \cdots & 0 & v_{n} & 1
+\end{array}\right]\left[\begin{array}{ccccc}
+\beta_{1} & c_{1} & 0 & \cdots & 0 \\
+0 & \beta_{2} & c_{2} & \ddots & \vdots \\
+0 & 0 & \ddots & \ddots & 0 \\
+\vdots & \vdots & \ddots & \beta_{n-1} & c_{n-1} \\
+0 & 0 & \cdots & 0 & \beta_{n}
+\end{array}\right]=L U
+$$
+To determine $L, U:$
+$$
+\begin{aligned}
+b_{1}=\beta_{1} & \Rightarrow \beta_{1}=b_{1} \\
+a_{k}=v_{k} \beta_{k-1} & \Rightarrow v_{k}=a_{k} / \beta_{k-1} \\
+b_{k}=v_{k} c_{k-1}+\beta_{k} & \Rightarrow \beta_{k}=b_{k}-v_{k} c_{k-1}, \quad k=2, \ldots, n
+\end{aligned}
+$$
+
+
+    \item 
+$A=\left[\begin{array}{lll}
+1 & 0 & 0 \\
+1 & 1 & 0 \\
+0 & 1 & 1
+\end{array}\right]\left[\begin{array}{lll}
+1 & 1 & 0 \\
+0 & 1 & 1 \\
+0 & 0 & 1
+\end{array}\right]=L u=L D L^{\top}$
+$\\
+B =\left[\begin{array}{lll}
+1 & 0 & 0 \\
+1 & 1 & 0 \\
+0 & 1 & 1
+\end{array}\right]\left[\begin{array}{lll}
+a & a & 0 \\
+0 & b & b \\
+0 & 0 & c
+\end{array}\right]=L H \\
+=\left[\begin{array}{lll}
+1 & 0 & 0 \\
+1 & 1 & 0 \\
+0 & 1 & 1
+\end{array}\right]\left[\begin{array}{lll}
+a & 0 & 0 \\
+0 & b & 0 \\
+0 & 0 & c
+\end{array}\right]\left[\begin{array}{lll}
+1 & 1 & 0 \\
+0 & 1 & 1 \\
+0 & 0 & 1
+\end{array}\right]=L D L^{T}
+$
+
+
+
+
+
+
+
+\end{enumerate}
+
+\newpage
+\section{Programming}
+\noindent\textbf{Problem 6}
+\textcolor{blue}{(5 points + 15 points)}
+
+\noindent In this problem, we explore  the efficiency of the LU method together with the classical linear system solvers we have learnt in linear algebra. 
+
+\begin{enumerate}
+	\item Derive the complexity of the LU decomposition. Particularly, how many flops does the LU decomposition require? The corresponding pseudo code (in {\sf Matlab}) is provided as follows: 
+\begin{lstlisting}[language=Matlab]
+function [L,U]= Naive_lu(A) 
+    n = size(A,1)
+    L = eye(n)
+    U = A 
+    for k=1:n-1
+        for j=k+1:n
+            L(j,k)=U(j,k)/U(k,k)
+            U(j,k:n)=U(j,k:n)-L(j,k)*U(k,k:n)
+        end
+    end
+    for k=2:n
+        U(k,1:k-1)=0
+    end
+end
+\end{lstlisting}
+\item 
+\textbf{Programming part:} 
+Randomly generate a non-singular matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$ and a vector $\mathbf{b}\in\mathbb{R}^{n\times 1}$, then program the following  methods to solve $\mathbf{Ax=b}$: 
+\begin{itemize}
+  \item {\bf The inverse method:} Use the inverse of $\mathbf{A}$ to solve the problem, which can be written as,
+  \[
+  \mathbf{x}=\mathbf{A}^{-1}\mathbf{b}\,.
+  \]
+  \item {\bf Cramer rule:} Suppose $\mathbf{x}=[x_1,\dots,x_n]^T$, and we denote $\mathbf{A}_{-i}(\mathbf{b})$ the matrix that we replace the $i$-th column of $\mathbf{A}$ with $\mathbf{b}$. Then we have
+    \[
+      x_i=\frac{\det(\mathbf{A}_{-i}(\mathbf{b}))}{\det(\mathbf{A})}, i=1,\dots,n\,.
+    \]
+  \item {\bf Gauss Elimination:} We perform row operations on the augmented matrix $[\mathbf{A}|\mathbf{b}]$, and use back substitution to obtain the solution $\mathbf{x}$.
+  \item {\bf LU decomposition.} We first find the LU decomposition of $\mathbf{A}$, then we solve $\mathbf{L}\mathbf{y}=\mathbf{b}$ and $\mathbf{U}\mathbf{x}=\mathbf{y}$.
+\end{itemize}
+In your homework, you are required to submit the time-consuming plot (\textbf{one figure}) of given methods against the size of matrix $\mathbf{A}$ (i.e., $n$), where $n=100, 150,\dots, 1000$ (You can try larger $n$ and see what will happen, but be careful with the memory use of your PC!). 
+
+\newpage
+
+\noindent\textbf{Remarks: (Important!)} 
+\begin{itemize}
+    \item Coding languages are restricted, but do not use any bulit-in function. For example, do not use {\sf Matlab} functions such as {\sf A/b}, {\sf inv(A)} or {\sf lu(A)}. Otherwise, your results will contradict the complexity analysis, and your scores will be discounted. You can implement the simplest version of these methods by yourself.
+    \item When handing in your homework in gradescope, package all your codes into {\sf your\_student\_id+hw2\_code.zip} and upload. In the package, you also need to include a file named {\sf README.txt/md} to clearly identify the function of each file.
+     \item Make sure that your codes can run and are consistent with your solutions.
+  %\item In {\sf Matlab}, to randomly generate a matrix or a vector, you can use {\sf randn} function to generate normally distributed random numbers.
+\end{itemize}
+\end{enumerate} 
+
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item 
+$
+ \sum_{k=1}^{n-1}[1+2(n-k+1)](n-k) \\
+= \sum_{k=1}^{n-1} 2(n-k)^{2}+3(n-k) \\
+=\left.\sum_{k=1}^{n-1} 2\left(n^{2}-2 n k+k^{2}\right)+3 \mid n-k\right) \\
+= 2 n^{2}(n-1)-4 n \sum_{k=1}^{n-1} k+2 \sum_{k=1}^{n-1} k^{2}+3 n(n-1)-3 \sum_{k=1}^{n-1} k \\
+= 2 n^{3}-2 n^{2}-(4 n+3) \frac{n(n-1)}{2}+2 \frac{(2 n-1) n(n-1)}{6}+3 n^{2}-3 n \\
+= \frac{2}{3} n^{3} \quad(n>>0)
+$
+
+
+    \item 
+\begin{figure} 
+\centering 
+\includegraphics[width=7in,height=4in]{problem6.jpg} 
+\caption{This is an inserted JPG graphic} 
+\label{fig:graph} 
+\end{figure} 
+
+\begin{lstlisting}
+dimention = 100:100:2000;
+compute_time=zeros(4,length(dimention));
+for n=100:100:2000
+    A=round(10*rand(n,n));
+    b=round(10*rand(n,1));
+    
+    t1=cputime;
+    method_1=INVERSE(A,b);
+    compute_time(1,n/100)=cputime-t1
+    
+    t2=cputime;
+    method_2=CRAMER(A,b);
+    compute_time(2,n/100)=cputime-t2
+   
+    t3=cputime;
+    method_3=GAUSS(A,b);
+    compute_time(3,n/100)=cputime-t3
+    
+    t4=cputime;
+    method_4=LU(A,b);
+    compute_time(4,n/100)=cputime-t4    
+end
+plot(dimention,compute_time(1,:),'ro-');hold on;
+plot(dimention,compute_time(2,:),'gs-');hold on;
+plot(dimention,compute_time(3,:),'bd-');hold on;
+plot(dimention,compute_time(4,:),'yp-');hold off;
+\end{lstlisting}
+
+\begin{lstlisting}
+function inverse_ans =INVERSE(A,b)
+N=length(A);
+%get the upper triangular matrix
+B=eye(N);
+for i=1:N
+    max=A(i,i);
+    M=i;
+    for j=i+1:N
+        if(abs(A(j,i))>abs(max))%To find the maximum
+            max=A(j,i);
+            M=j;
+        end
+    end
+    for m=1:N
+        temp1=A(i,m);%Swap the row where the maximum value is and the current row
+        A(i,m)=A(M,m);
+        A(M,m)=temp1;
+        temp2=B(i,m);
+        B(i,m)=B(M,m);
+        B(M,m)=temp2;
+    end
+    for k=i+1:N
+        xishu=A(k,i)/A(i,i);%The other rows are weighted to give you the upper triangle
+        for n=1:N
+            A(k,n)=A(k,n)-xishu*A(i,n);
+            B(k,n)=B(k,n)-xishu*B(i,n);
+        end
+    end
+end
+temp3=A;
+%get the identity matrix
+for s=N:-1:1
+    xishu1 =A(s,s);
+    for p=s:N
+        A(p,s)=A(p,s)/xishu1;
+    end
+    for q=1:N
+        B(s,q)=B(s,q)/xishu1;
+    end
+    for w=s-1:-1:1
+        xishu=A(w,s);
+        A(w,s)=0;
+        for t=1:N
+            B(w,t)=B(w,t)-xishu*B(s,t);
+        end
+    end
+end
+temp2=A;
+inverse_ans=B*b;
+\end{lstlisting}
+
+\begin{lstlisting}
+function cramer_ans = CRAMER(A,b)
+N=length(A);
+cramer_ans=zeros(N,1);
+D_det=zeros(N,1);
+D=det(A);
+A0=A;
+for i=1:N
+    for j=1:N
+        A0(j,i)=b(j);
+    end
+    D_det(i)=det(A0);
+    A0=A;
+end
+for k=1:N
+    cramer_ans(k)=D_det(k)/D;
+end
+\end{lstlisting}
+
+\begin{lstlisting}
+function Gauss_ans=GAUSS(A,b)
+N=length(A);
+for i=1:N
+    max=A(i,i);
+    M=i;
+    for j=i+1:N
+        if(abs(A(j,i))>abs(max))%Look for the i th column maximum
+            max=A(j,i);
+            M=j;
+        end
+    end
+    for m=i:N
+        temp1=A(i,m);%Swap the row where the maximum value is and the current row
+        A(i,m)=A(M,m);
+        A(M,m)=temp1;
+    end
+        temp2=b(i);
+        b(i)=b(M);
+        b(M)=temp2;
+   
+    for k=i+1:N
+        xishu=A(k,i)/A(i,i);%The other rows are weighted to give you the upper triangle
+        for n=i:N
+            A(k,n)=A(k,n)-xishu*A(i,n);
+        end
+        b(k)=b(k)-xishu*b(i);
+    end
+end
+Gauss_ans=zeros(N,1);
+% Gauss_ans(N)=b(N)/A(N,N); 
+for p=N:-1:1
+    Gauss_ans(p)=b(p)/A(p,p);
+    for q=N:-1:p+1
+        Gauss_ans(p)=Gauss_ans(p)-Gauss_ans(q)*A(p,q)/A(p,p);        
+    end
+end
+\end{lstlisting}
+
+\begin{lstlisting}
+function LU_ans = LU(A,b)
+N=length(A);
+z = zeros(N,1);
+LU_ans = zeros(N,1);
+L=eye(N);%Let the L matrix be an identity matrix at first
+for i=1:N-1
+    for j=i+1:N            
+            L(j,i)=A(j,i)/A(i,i);
+            A(j,:)=A(j,:)-(A(j,i)/A(i,i))*A(i,:);
+    end
+end
+
+for p=1:1:N
+    z(p)=b(p)/L(p,p);
+    for q=1:1:p-1
+        z(p)=z(p)-z(q)*L(p,q)/L(p,p);        
+    end
+end
+for p_2=N:-1:1
+    LU_ans(p_2)=z(p_2)/A(p_2,p_2);
+    for q_2=N:-1:p_2+1
+        LU_ans(p_2)=LU_ans(p_2)-LU_ans(q_2)*A(p_2,q_2)/A(p_2,p_2);        
+    end
+end
+\end{lstlisting}
+
+
+
+\end{enumerate}
+
+\newpage
+
+\section{Roundoff Error}
+\noindent\textbf{Problem 7} \textcolor{blue}{(Bonus Problem: 10 points + 8 points + 2 points)}
+
+Given a matrix $\mathbf{A}\in \mathbb{R}^{n\times n}$, consider the roundoff error in the process of solving $\mathbf{A}\bf{x} = \bf{b}$ by Gaussian elimination in three stages:
+\begin{enumerate}
+    \item[1.] Decompose $\mathbf{A}$ into $\mathbf{L}\mathbf{U}$, in a machine with roundoff error $\mathbf{E}$, $\bar{\mathbf{L}}$ and $\bar{\mathbf{U}}$ are computed instead, i.e., 
+    \begin{equation*}
+        \mathbf{A} + \mathbf{E} = \bar{\mathbf{L}}\bar{\mathbf{U}}\,.
+    \end{equation*}
+    \item[2.] Solving $\mathbf{L}\bf{y} = \bf{b}$, numerically with roundoff error $\delta \mathbf{\bar{L}}$, $\hat{\mathbf{y}} = \bf{y}+\delta \bf{y}$ are computed instead, i.e.,
+    \begin{equation*}
+        (\bar{\mathbf{L}}+\delta \bar{\mathbf{L}})(\bf{y}+\delta \bf{y}) = \bf{b}\,.
+    \end{equation*}
+    \item[3.] Solving $\mathbf{U}\bf{x} = \bf{y}$, numerically with roundoff error $\delta \mathbf{\bar{U}}$, $\hat{\bf{x}} = \bf{x}+\delta \bf{x}$ are computed instead, i.e.,
+    \begin{equation*}
+        (\bar{\mathbf{U}}+\delta \bar{\mathbf{U}})(\bf{x}+\delta \bf{x}) = \hat{y}\,.
+    \end{equation*}
+\end{enumerate}
+Finally, we can get the computed solution $\hat{\bf{x}}$ and 
+\begin{align*}
+    \bf{b} = &(\bar{\mathbf{L}}+\delta \bar{\mathbf{L}})(\bar{\mathbf{U}}+\delta \bar{\mathbf{U}})(\bf{x}+\delta \bf{x})\\
+     = & (\mathbf{A}+\delta \mathbf{A})(\bf{\bf{x}}+\delta \bf{\bf{x}})\,.
+\end{align*}
+
+\begin{enumerate}
+    \item Prove that the relative error of $\bf{x}$ has an upper bound as follows,
+    \begin{equation*}
+        \frac{\|\hat{\mathbf{x}}-\mathbf{x}\|}{\|\mathbf{x}\|} = \frac{\|\delta \bf{x}\|}{\|\bf{x}\|} \leq \frac{1}{1-\kappa(\mathbf{A})\frac{\|\delta \mathbf{A}\|}{\|\mathbf{A}\|}}\kappa(\mathbf{A})\frac{\|\delta \mathbf{A}\|}{\|\mathbf{A}\|},
+    \end{equation*}
+    where $\kappa(\mathbf{A}) = \|\mathbf{A}\|\|\mathbf{A}^{-1}\|$ denotes the condition number of matrix $\mathbf{A}$ (Suppose $\mathbf{A}$ and $\mathbf{A}+\delta \mathbf{A}$ are nonsingular and $\|\mathbf{A}^{-1}\|\|\delta \mathbf{A}\|<1$), and $\|\cdot\|$ can be any norm.
+    
+    \textbf{Hint}: The following equation might be useful,
+    \begin{align*}
+        \|(\mathbf{I}-\mathbf{B})^{-1}\| =  \|\sum_{k = 0}^{\infty} \mathbf{B}^k\| \leq \sum_{k = 0}^{\infty} \|\mathbf{B}\|^k \leq  \frac{1}{1-\|\mathbf{B}\|}\,.
+    \end{align*}
+    
+    % \begin{equation}
+    %     (\mathbf{I}-\mathbf{A})^{-1} = \mathbf{I} + \mathbf{A} + \mathbf{A}^2 + ... = \sum_{k = 0}^\infty \mathbf{A}^{k},
+    % \end{equation}
+    
+    where $\mathbf{I}-\mathbf{B}$ is nonsingular and $\lim_{n\to \infty}\mathbf{B}^n = \mathbf{0}$.
+    
+    \item Consider a linear system $\mathbf{A}\mathbf{x} = \mathbf{b}$, where
+    
+    \[
+        \mathbf{A} = \begin{bmatrix}2 & -1 & 1 \\ -1 &10^{-10} &10^{-10}\\ 1 & 10^{-10} & 10^{-10}  \end{bmatrix},\quad \mathbf{b} = \begin{bmatrix}2(1+10^{-10}) \\ -10^{-10} \\10^{-10} \end{bmatrix}
+    \]
+    
+    find the solution $\mathbf{x}$, and calculate the condition number of $\mathbf{A}$ with the matrix infinite norm\footnote{If $\mathbf{A}\in\mathbb{R}^{n\times n}$, then the matrix infinite norm is  $\|\mathbf{A}\|_{\infty} = \max_{1<i<n}\sum_{j = 1}^n|a_{i,j}|$.}, i.e. $\kappa_\infty(\mathbf{A}) = \|\mathbf{A}\|_\infty\|\mathbf{A}^{-1}\|_\infty$. Suppose $|\delta\mathbf{A}|<10^{-18}|\mathbf{A}|$\footnote{$|\mathbf{A}|\leq |\mathbf{B}|$ means each element in $\mathbf{A}$ is relative smaller to the corresponding element of $\mathbf{A}$}, use $\kappa_\infty(\mathbf{A})$ to verify that 
+    \[
+        \|\delta \mathbf{x}\|< 10^{-7} \|\mathbf{x}\|. 
+    \]
+    
+    
+    \item Discuss what you have observed from the previous 2 questions. What are the main factors that influence the relative error of the computed solution? Does the ill-conditioned matrix (i.e. the condition number is large) always lead to a large error of the solution?     
+\end{enumerate}
+
+\noindent\textbf{Solution.}
+\begin{enumerate}
+    \item 
+Because $\left\|A^{-1} A\right\|<1$.then $\left\|A^{-1} \delta A\right\|<1$. We have
+$$
+A+\delta A=A\left(I+A^{-1} \delta A\right)=A(I+A^{-1} \delta A)
+$$
+From the manipulations
+$$
+\begin{aligned}
+(A+\delta A)^{-1} \mathbf{b}-A^{-1} \mathbf{b} &=\left(I+A^{-1} \delta A\right)^{-1} A^{-1} \mathbf{b}-A^{-1} \mathbf{b} \\
+&=\left(I+A^{-1} \delta A\right)^{-1}\left(A^{-1}-\left(I+A^{-1} \delta A\right) A^{-1}\right) \mathbf{b} \\
+&=\left(I+A^{-1} \delta A\right)^{-1}\left(-A^{-1}(\delta A) A^{-1}\right) \mathbf{b}
+\end{aligned}
+$$
+and use the condition of question stem,we get
+$$
+\left\|(I+A^{-1} \delta A)^{-1}\right\| \leq \frac{1}{1-\left\|A^{-1} \delta A\right\|}
+$$
+we obtain
+$$
+\frac{\|\delta \mathrm{x}\|}{\|\mathrm{x}\|}=\frac{\|(\mathrm{x}+\delta \mathrm{x})-\mathrm{x}\|}{\|\mathrm{x}\|}
+$$
+$$
+\begin{aligned}
+\therefore \frac{\|\delta x\|}{\|x\|} &=\frac{\|\hat{x}-x\|}{\|x\|}=\frac{\left\|-\left(\mathbf{I}+A^{-1} \delta A\right)^{-1} A^{-1} \delta A x\right\|}{\|x\|} \\
+& \leq \frac{\left\|\left(\mathbf{I}+A^{-1} \delta A\right)^{-1} A^{-1} \delta A\right\|\|x\|}{\|x\|} \\
+& \leq\left\|\left(I+A^{-1} \delta A\right)^{-1}\right\|\left\|A^{-1}\right\|\|\delta A\| \\
+& \leq \frac{1}{1-\left\|A^{-1} \delta A\right\|}\left\|A^{-1}\right\|\|\delta A\| \\
+& \leq \frac{\left\|A^{-1}\right\|\|\delta A\|}{1-\left\|A^{-1}\right\|\|\delta A\|} \\
+&=\frac{1}{1-\kappa(A) \frac{\|\delta A\|}{\|A\|}} \kappa(A) \frac{\|\delta A\|}{\|A\|}
+\end{aligned}
+$$
+
+
+
+    \item 
+$$
+A=\mathbf{L}\mathbf{U}=\left[\begin{array}{rrr}
+1 & 0 & 0 \\
+-\frac{1}{2} & 1 & 0 \\
+\frac{1}{2} & \frac{10^{-10}+\frac{1}{2}}{10^{-10}-\frac{1}{2}} & 1
+\end{array}\right] \quad \left[\begin{array}{ccc}
+2 & -1 & 1 \\
+0 & 10^{-10}-\frac{1}{2} & 10^{-10}+\frac{1}{2} \\
+0 & 0 & -\frac{2 \times 10^{-10}}{10^{-10}-\frac{1}{2}}
+\end{array}\right]
+$$
+$$
+\begin{aligned}
+&\text { we can get}\   y=\left(2\left(1+10^{-10}\right), \quad 1, \quad-\frac{2 \times 10^{-10}}{10^{-10}-\frac{1}{2}}\right)^{\top}, x=\left(10^{-10},-1,1\right)^{\top}\\
+&\therefore A^{-1}=\left[\begin{array}{ccc}
+0 & -\frac{1}{2} & \frac{1}{2} \\
+-\frac{1}{2} & \frac{\frac{1}{2}-10^{-10}}{2 \times 10^{-10}} & \frac{\frac{1}{2}+10^{-10}}{2 \times 10^{-10}} \\
+\frac{1}{2} & \frac{\frac{1}{2}+10^{-10}}{2 \times 10^{-10}} & \frac{\frac{1}{2}-10^{-10}}{2 \times 10^{-10}}
+\end{array}\right]\\
+&\therefore \kappa_{\infty}(\mathbf{A})=\|\mathbf{A}\|_{\infty}\left\|\mathbf{A}^{-1}\right\|_{\infty}=4 \times \frac{10^{10}+1}{2}=2\left(10^{10}+1\right)\\
+&\therefore \frac{\|\delta \mathrm{x}\|}{\|\mathrm{x}\|} \leq \frac{1}{1-\kappa(\mathbf{A}) \frac{\|\delta \mathbf{A}\|}{\|\mathbf{A}\|}} \kappa(\mathbf{A}) \frac{\|\delta \mathbf{A}\|}{\|\mathbf{A}\|}=\frac{2\left(10^{10}+1\right) \frac{\|\delta \mathbf{A}\|}{\|\mathbf{A}\|}}{1-2\left(10^{10}+1\right) \frac{\| \delta \mathbf{A}}{\|\mathbf{A}\|}}=\frac{1}{\frac{|\mathbf{A}|}{2\left(10^{10}+1\right)|\delta \mathbf{A}|}-1}\\
+&<\frac{1}{\frac{\|\mathbf{A}\|}{2\left(10^{10}+1\right)\|\delta \mathbf{A}\|}-1}<\frac{1}{\frac{10^{18}}{2\left(10^{10}+1\right)}-1}<\frac{1}{\frac{10^{18}}{5 \times 10^{10}}-1}=\frac{1}{2 \times 10^{7}-1}<10^{-7}\\
+&\text { So we get }\ \|\delta \mathbf{x}\|<10^{-7}\|\mathbf{x}\| \text { . }
+\end{aligned}
+$$
+
+
+    \item condition number of $\bold A$ influence the relative error of the computed solution.
+\end{enumerate}
+
+\end{document}
